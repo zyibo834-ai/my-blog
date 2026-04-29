@@ -83,4 +83,4 @@ Through this assignment, I successfully set up a Linux development environment u
 ---
 ## 6. References
 - Markdown Guide: https://www.markdownguide.org/  
-- Python 3 Documentation: https://docs.python.org/3/  
+- Python 3 Documentation: https://docs.python.org/3/   
