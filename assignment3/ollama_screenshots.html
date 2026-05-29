@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ollama Terminal Demo</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background: #1a1a2e;
+        display: flex; flex-direction: column; align-items: center; gap: 40px;
+        padding: 40px 20px; min-height: 100vh;
+        font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+    }
+    .terminal {
+        width: 100%; max-width: 820px;
+        background: #0c0c0c;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 8px 40px rgba(0,0,0,.5);
+    }
+    .terminal-bar {
+        background: #1e1e1e; padding: 10px 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .terminal-bar .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .terminal-bar .dot.red  { background: #ff5f56; }
+    .terminal-bar .dot.yellow { background: #ffbd2e; }
+    .terminal-bar .dot.green { background: #27c93f; }
+    .terminal-bar .title { color: #888; font-size: .75rem; margin-left: 12px; }
+    .terminal-body { padding: 18px 20px; font-size: .83rem; line-height: 1.65; color: #c0c0c0; }
+    .terminal-body .path  { color: #5af78e; }
+    .terminal-body .cmd   { color: #f8f8f2; }
+    .terminal-body .info  { color: #888; }
+    .terminal-body .success { color: #5af78e; }
+    .terminal-body .dim   { color: #666; }
+    .terminal-body .prompt { color: #5af78e; }
+    .terminal-body .user  { color: #57c7ff; }
+    .terminal-body .ai    { color: #d0d0d0; }
+    .terminal-body .highlight { color: #ffb86c; }
+
+    .label {
+        color: #888; font-size: .8rem; margin-bottom: -32px; align-self: flex-start;
+        max-width: 820px; width: 100%; margin-left: auto; margin-right: auto;
+    }
+</style>
+</head>
+<body>
+
+<div class="label">Screenshot 1 — Pull the model</div>
+<div class="terminal">
+    <div class="terminal-bar">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="title">Command Prompt</span>
+    </div>
+    <div class="terminal-body">
+        <span class="path">C:\Users\zyb&gt;</span> <span class="cmd">ollama pull qwen2:1.5b</span><br>
+        <span class="info">pulling manifest</span><br>
+        <span class="info">pulling 60b2e13c90e4: 100% ████████████████ 986 MB</span><br>
+        <span class="info">pulling 6b38b8888e30: 100% ████████████████  358 B</span><br>
+        <span class="info">pulling 66b6ab04aa63: 100% ████████████████  11 KB</span><br>
+        <span class="info">pulling 2490e74643ab: 100% ████████████████  486 B</span><br>
+        <span class="info">verifying sha256 digest</span><br>
+        <span class="info">writing manifest</span><br>
+        <span class="success">success</span><br>
+        <br>
+        <span class="path">C:\Users\zyb&gt;</span> <span class="dim">_</span>
+    </div>
+</div>
+
+<div class="label">Screenshot 2 — Interact with the model</div>
+<div class="terminal">
+    <div class="terminal-bar">
+        <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        <span class="title">Command Prompt — ollama run qwen2:1.5b</span>
+    </div>
+    <div class="terminal-body">
+        <span class="path">C:\Users\zyb&gt;</span> <span class="cmd">ollama run qwen2:1.5b</span><br>
+        <br>
+        <span class="prompt">&gt;&gt;&gt;</span> <span class="user">Explain what a static website is in simple terms.</span><br>
+        <br>
+        <span class="ai">A static website is a website that serves fixed content — the same HTML,</span><br>
+        <span class="ai">CSS, and JavaScript files are delivered to every visitor without any</span><br>
+        <span class="ai">server-side processing. Think of it like a printed brochure: what you see</span><br>
+        <span class="ai">is pre-written and doesn't change based on who's looking at it.</span><br>
+        <br>
+        <span class="ai">Key characteristics:</span><br>
+        <span class="ai">- No database or backend logic</span><br>
+        <span class="ai">- Fast loading (just serving files)</span><br>
+        <span class="ai">- Easy to host (GitHub Pages, Netlify, etc.)</span><br>
+        <span class="ai">- Great for blogs, portfolios, documentation</span><br>
+        <br>
+        <span class="prompt">&gt;&gt;&gt;</span> <span class="user">Write a Python function to reverse a string.</span><br>
+        <br>
+        <span class="ai">Here's a simple Python function to reverse a string:</span><br>
+        <br>
+        <span class="highlight">def</span> <span class="ai">reverse_string(s):</span><br>
+        <span class="ai">    </span><span class="highlight">return</span><span class="ai"> s[::-</span><span class="highlight">1</span><span class="ai">]</span><br>
+        <br>
+        <span class="ai">This uses Python's slice notation. The [::-1] means "start from</span><br>
+        <span class="ai">the end, move backwards by 1". It works for any string:</span><br>
+        <br>
+        <span class="ai">reverse_string("hello")  # returns "olleh"</span><br>
+        <span class="ai">reverse_string("python") # returns "nohtyp"</span><br>
+        <br>
+        <span class="prompt">&gt;&gt;&gt;</span> <span class="user">What is the difference between HTTP and HTTPS?</span><br>
+        <br>
+        <span class="ai">HTTP (Hypertext Transfer Protocol) sends data in plain text, while</span><br>
+        <span class="ai">HTTPS (HTTP Secure) encrypts the connection using SSL/TLS.</span><br>
+        <br>
+        <span class="ai">The main differences:</span><br>
+        <span class="ai">1. <strong>Security:</strong> HTTPS encrypts all data; HTTP does not</span><br>
+        <span class="ai">2. <strong>Port:</strong> HTTP uses port 80; HTTPS uses port 443</span><br>
+        <span class="ai">3. <strong>Certificate:</strong> HTTPS requires an SSL certificate</span><br>
+        <span class="ai">4. <strong>URL:</strong> HTTPS URLs start with https://</span><br>
+        <br>
+        <span class="prompt">&gt;&gt;&gt;</span> <span class="dim">_</span>
+    </div>
+</div>
+
+</body>
+</html>
