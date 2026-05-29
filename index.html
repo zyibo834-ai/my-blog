@@ -28,14 +28,31 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            cursor: default;
         }
 
-        /* ── Subtle grain texture overlay ── */
+        /* ── Grain texture overlay ── */
         body::before {
             content: "";
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             opacity: .025;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ── Particle canvas ── */
+        #particles {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+
+        /* ── Mouse glow ── */
+        .mouse-glow {
+            position: fixed; z-index: 0; pointer-events: none;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--accent-rgb), .06) 0%, rgba(var(--accent-rgb), .02) 40%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: left .6s ease-out, top .6s ease-out;
+            will-change: left, top;
         }
 
         .container {
@@ -57,8 +74,16 @@
             font-family: Georgia, "Times New Roman", "Noto Serif", serif;
             font-size: clamp(1.8rem, 5vw, 2.6rem);
             font-weight: 400; color: var(--text); line-height: 1.25; letter-spacing: -.01em;
+            min-height: 1.25em;
         }
         header h1 em { font-style: italic; color: var(--accent); }
+        header h1 .cursor {
+            display: inline-block; width: 2px; height: 1.1em;
+            background: var(--accent); vertical-align: text-bottom; margin-left: 1px;
+            animation: blink .8s steps(1) infinite;
+        }
+        header h1 .cursor.done { animation: none; opacity: 0; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         header .subtitle { color: var(--muted); font-size: .95rem; margin-top: 10px; }
 
         /* ── Section title ── */
@@ -80,7 +105,7 @@
             border-radius: 6px;
             padding: 28px 32px;
             position: relative;
-            transition: transform .25s ease, box-shadow .25s ease;
+            transition: transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s ease;
             box-shadow: var(--shadow);
             display: grid;
             grid-template-columns: auto 1fr auto;
@@ -101,6 +126,17 @@
             transition: width .3s ease;
         }
         .card:hover::before { width: 3px; }
+
+        /* Scroll reveal */
+        .card.reveal {
+            opacity: 0; transform: translateY(36px);
+        }
+        .card.reveal.visible {
+            opacity: 1; transform: translateY(0);
+        }
+        .card:nth-child(1).reveal { transition: opacity .6s ease .05s, transform .6s cubic-bezier(.25,.46,.45,.94) .05s, box-shadow .35s ease; }
+        .card:nth-child(2).reveal { transition: opacity .6s ease .15s, transform .6s cubic-bezier(.25,.46,.45,.94) .15s, box-shadow .35s ease; }
+        .card:nth-child(3).reveal { transition: opacity .6s ease .25s, transform .6s cubic-bezier(.25,.46,.45,.94) .25s, box-shadow .35s ease; }
 
         .card .card-num {
             grid-row: 1 / span 3; grid-column: 1;
@@ -154,16 +190,21 @@
             .card .card-num { display: none; }
             .card .card-links { flex-direction: column; gap: 8px; }
             footer { flex-direction: column; align-items: flex-start; }
+            .mouse-glow { display: none; }
+            #particles { opacity: .5; }
         }
     </style>
 </head>
 <body>
 
+<canvas id="particles"></canvas>
+<div class="mouse-glow" id="glow" aria-hidden="true"></div>
+
 <div class="container">
 
     <header>
         <p class="overline">Fundamentals of Software Technology &middot; 2026</p>
-        <h1>Zhan <em>Yibo</em>'s<br>Personal Blog</h1>
+        <h1 id="hero-title"></h1>
         <p class="subtitle">A static portfolio documenting coursework in software engineering,<br>version control, and remote development workflows.</p>
     </header>
 
@@ -171,7 +212,7 @@
 
     <div class="cards">
 
-        <div class="card">
+        <div class="card reveal">
             <span class="card-num">01</span>
             <h3><a href="report.pdf" target="_blank">Remote Development</a></h3>
             <p>Research and implementation of radar signal processing environments &mdash; exploring WSL-based toolchains and cross-platform development.</p>
@@ -181,7 +222,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card reveal">
             <span class="card-num">02</span>
             <h3><a href="Assignment2_report.html">Static Site &amp; Git Management</a></h3>
             <p>Deployment of this blog using GitHub Pages with structured version control &mdash; from local repository initialization to live hosting.</p>
@@ -190,7 +231,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card reveal">
             <span class="card-num">03</span>
             <h3><a href="assignment3/Assignment3_report.html">Deployment &amp; Integration of AI Agents</a></h3>
             <p>Configuring online and local LLMs, building a Python agent for file analysis, and integrating AI into the IDE workflow.</p>
@@ -208,6 +249,159 @@
     </footer>
 
 </div>
+
+<script>
+(function() {
+    /* ═══════════════════════════════════════════
+       Particle Background
+       ═══════════════════════════════════════════ */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const PARTICLE_COUNT = 70;
+    const CONNECT_DIST = 120;
+    const ACCENT = [139, 105, 20]; // var(--accent-rgb)
+
+    let w, h;
+
+    function resize() {
+        w = canvas.width  = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor() {
+            this.reset(true);
+        }
+        reset(init) {
+            this.x = init ? Math.random() * w : (Math.random() < .5 ? -10 : w + 10);
+            this.y = init ? Math.random() * h : (Math.random() < .5 ? -10 : h + 10);
+            this.vx = (Math.random() - .5) * .35;
+            this.vy = (Math.random() - .5) * .35;
+            this.r = Math.random() * 1.4 + .6;
+            this.alpha = Math.random() * .35 + .15;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) this.reset(false);
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${ACCENT.join(',')},${this.alpha})`;
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            // Connect nearby particles
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < CONNECT_DIST) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(${ACCENT.join(',')},${.04 * (1 - dist / CONNECT_DIST)})`;
+                    ctx.lineWidth = .5;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    /* ═══════════════════════════════════════════
+       Mouse Glow
+       ═══════════════════════════════════════════ */
+    const glow = document.getElementById('glow');
+    let mx = -300, my = -300;
+    let cx = -300, cy = -300;
+
+    document.addEventListener('mousemove', function(e) {
+        mx = e.clientX;
+        my = e.clientY;
+    });
+
+    function followGlow() {
+        cx += (mx - cx) * .08;
+        cy += (my - cy) * .08;
+        glow.style.left = cx + 'px';
+        glow.style.top  = cy + 'px';
+        requestAnimationFrame(followGlow);
+    }
+    followGlow();
+
+    /* ═══════════════════════════════════════════
+       Typewriter
+       ═══════════════════════════════════════════ */
+    const heroEl = document.getElementById('hero-title');
+    const targetHTML = `Zhan <em>Yibo</em>'s<br>Personal Blog`;
+    let charIndex = 0;
+    const cursorSpan = document.createElement('span');
+    cursorSpan.className = 'cursor';
+
+    function typeChar() {
+        if (charIndex < targetHTML.length) {
+            // Build partial HTML — only render up to completed tags
+            let partial = targetHTML.substring(0, charIndex + 1);
+            // Ensure we don't cut mid-tag: delay rendering until we hit '>'
+            if (targetHTML[charIndex] === '>') {
+                // Find the matching < for this tag
+                let tagStart = partial.lastIndexOf('<');
+                let tagContent = targetHTML.substring(tagStart, charIndex + 1);
+                // Only render when tag is complete
+                heroEl.innerHTML = partial + '<span class="cursor"></span>';
+            } else if (targetHTML[charIndex] === '<') {
+                // Don't show incomplete tag — use previous state
+                heroEl.innerHTML = targetHTML.substring(0, charIndex) + '<span class="cursor"></span>';
+            } else if (charIndex > 0 && targetHTML[charIndex - 1] === '>') {
+                // We're past a completed tag, normal rendering
+                heroEl.innerHTML = partial + '<span class="cursor"></span>';
+            } else if (partial.indexOf('<') === -1 || partial.lastIndexOf('>') > partial.lastIndexOf('<')) {
+                // No open tag — safe to render
+                heroEl.innerHTML = partial + '<span class="cursor"></span>';
+            } else {
+                // Inside a tag — render last safe state
+                let lastSafe = partial.lastIndexOf('>');
+                heroEl.innerHTML = (lastSafe >= 0 ? targetHTML.substring(0, lastSafe + 1) : '') + '<span class="cursor"></span>';
+            }
+            charIndex++;
+            setTimeout(typeChar, 55 + Math.random() * 25);
+        } else {
+            heroEl.innerHTML = targetHTML;
+            heroEl.querySelector('.cursor')?.classList.add('done');
+        }
+    }
+    setTimeout(typeChar, 400);
+
+    /* ═══════════════════════════════════════════
+       Scroll Reveal (Intersection Observer)
+       ═══════════════════════════════════════════ */
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: .12, rootMargin: '0px 0px -30px 0px' });
+
+    revealEls.forEach(function(el) { observer.observe(el); });
+})();
+</script>
 
 </body>
 </html>

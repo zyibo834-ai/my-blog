@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment 2 Report &mdash; Zhan Yibo</title>
+    <title>Assignment 2 Report — Zhan Yibo</title>
     <style>
         :root {
             --bg:        #fdfaf5;
@@ -32,6 +32,31 @@
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             opacity: .025;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ── Particle canvas ── */
+        #particles {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+
+        /* ── Mouse glow ── */
+        .mouse-glow {
+            position: fixed; z-index: 0; pointer-events: none;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--accent-rgb), .06) 0%, rgba(var(--accent-rgb), .02) 40%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: left .6s ease-out, top .6s ease-out;
+            will-change: left, top;
+        }
+
+        /* ── Scroll progress bar ── */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width .1s linear;
+            border-radius: 0 2px 2px 0;
         }
 
         .container {
@@ -77,6 +102,15 @@
         .meta-card strong { font-weight: 600; color: var(--text); }
         .meta-card a { color: var(--accent); text-decoration: none; }
         .meta-card a:hover { text-decoration: underline; }
+
+        /* ── Scroll reveal ── */
+        section.reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity .7s ease, transform .7s cubic-bezier(.25,.46,.45,.94);
+        }
+        section.reveal.visible {
+            opacity: 1; transform: translateY(0);
+        }
 
         /* ── Sections ── */
         section { margin-bottom: 48px; }
@@ -131,10 +165,16 @@
             .meta-card { flex-direction: column; gap: 4px; }
             section { margin-bottom: 36px; }
             footer { flex-direction: column; align-items: flex-start; }
+            .mouse-glow { display: none; }
+            #particles { opacity: .5; }
         }
     </style>
 </head>
 <body>
+
+<canvas id="particles"></canvas>
+<div class="mouse-glow" id="glow" aria-hidden="true"></div>
+<div class="progress-bar" id="progress"></div>
 
 <div class="container">
 
@@ -150,7 +190,7 @@
         </div>
     </div>
 
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">01</span> Project Overview</h2>
         <p>
             The objective of this assignment was to build a personal static blog and deploy it using GitHub Pages.
@@ -158,23 +198,23 @@
         </p>
     </section>
 
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">02</span> Tools &amp; Methodology</h2>
         <ul>
-            <li><strong>Operating System:</strong> Windows Subsystem for Linux (WSL) &mdash; Ubuntu.</li>
+            <li><strong>Operating System:</strong> Windows Subsystem for Linux (WSL) — Ubuntu.</li>
             <li><strong>Version Control:</strong> Git.</li>
             <li><strong>Hosting Service:</strong> GitHub Pages.</li>
             <li><strong>Development:</strong> HTML5 / CSS3 for simple and accessible web design.</li>
         </ul>
     </section>
 
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">03</span> Rationale for Tool Selection</h2>
         <p>For this assignment, I chose <strong>Plain HTML/CSS</strong> and <strong>GitHub Pages</strong> for the following reasons:</p>
         <ul>
             <li>
                 <strong>GitHub Pages:</strong> It provides seamless integration with Git repositories, allowing for
-                &ldquo;Infrastructure as Code&rdquo; where every change to the website is tracked. It is also a standard
+                "Infrastructure as Code" where every change to the website is tracked. It is also a standard
                 in the industry for hosting project documentation and personal portfolios.
             </li>
             <li>
@@ -191,19 +231,19 @@
         </ul>
     </section>
 
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">04</span> Git Commit Rationale</h2>
         <p>I followed a structured 5-step commit process to maintain a clear project history:</p>
         <ol class="commit-steps">
-            <li><strong>Initial setup</strong> &mdash; Built the foundational HTML structure.</li>
-            <li><strong>Integration</strong> &mdash; Imported the Markdown and PDF reports from Assignment&nbsp;1.</li>
-            <li><strong>Navigation</strong> &mdash; Created hyperlinks to ensure all documents are accessible from the homepage.</li>
-            <li><strong>Documentation</strong> &mdash; Authored this deployment report to explain the project details.</li>
-            <li><strong>Final Polish</strong> &mdash; Enhanced the UI/UX with internal CSS and verified all links.</li>
+            <li><strong>Initial setup</strong> — Built the foundational HTML structure.</li>
+            <li><strong>Integration</strong> — Imported the Markdown and PDF reports from Assignment 1.</li>
+            <li><strong>Navigation</strong> — Created hyperlinks to ensure all documents are accessible from the homepage.</li>
+            <li><strong>Documentation</strong> — Authored this deployment report to explain the project details.</li>
+            <li><strong>Final Polish</strong> — Enhanced the UI/UX with internal CSS and verified all links.</li>
         </ol>
     </section>
 
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">05</span> Deployment Steps</h2>
         <ol>
             <li>Initialized the repository locally and managed files through the command line.</li>
@@ -212,7 +252,7 @@
         </ol>
     </section>
 
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">06</span> Challenges &amp; Solutions</h2>
         <p>
             During the deployment, I faced network connectivity issues with the GitHub API from my local environment.
@@ -227,6 +267,115 @@
     </footer>
 
 </div>
+
+<script>
+(function() {
+    /* ═══════════════════════════════════════════
+       Particle Background
+       ═══════════════════════════════════════════ */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const COUNT = 55;
+    const CONNECT = 120;
+    const RGB = [139, 105, 20];
+
+    let w, h;
+    function resize() {
+        w = canvas.width  = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor() { this.reset(true); }
+        reset(init) {
+            this.x = init ? Math.random() * w : (Math.random() < .5 ? -10 : w + 10);
+            this.y = init ? Math.random() * h : (Math.random() < .5 ? -10 : h + 10);
+            this.vx = (Math.random() - .5) * .3;
+            this.vy = (Math.random() - .5) * .3;
+            this.r = Math.random() * 1.3 + .5;
+            this.alpha = Math.random() * .3 + .12;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) this.reset(false);
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${RGB.join(',')},${this.alpha})`;
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+    function animate() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < CONNECT) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(${RGB.join(',')},${.04 * (1 - dist / CONNECT)})`;
+                    ctx.lineWidth = .5;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    /* ═══════════════════════════════════════════
+       Mouse Glow
+       ═══════════════════════════════════════════ */
+    const glow = document.getElementById('glow');
+    let mx = -300, my = -300, cx = -300, cy = -300;
+    document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+    function follow() {
+        cx += (mx - cx) * .08;
+        cy += (my - cy) * .08;
+        glow.style.left = cx + 'px';
+        glow.style.top  = cy + 'px';
+        requestAnimationFrame(follow);
+    }
+    follow();
+
+    /* ═══════════════════════════════════════════
+       Scroll Progress Bar
+       ═══════════════════════════════════════════ */
+    const progress = document.getElementById('progress');
+    window.addEventListener('scroll', function() {
+        const st = window.scrollY;
+        const dh = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.width = dh > 0 ? (st / dh) * 100 + '%' : '0%';
+    });
+
+    /* ═══════════════════════════════════════════
+       Scroll Reveal
+       ═══════════════════════════════════════════ */
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: .1, rootMargin: '0px 0px -20px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+})();
+</script>
 
 </body>
 </html>

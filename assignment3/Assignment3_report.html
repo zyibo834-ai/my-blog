@@ -11,6 +11,7 @@
             --text:      #2d2a26;
             --muted:     #6b6560;
             --accent:    #8b6914;
+            --accent-rgb: 139, 105, 20;
             --border:    #e6e0d8;
             --rule:      #d4cdc2;
             --shadow:    0 1px 3px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.05);
@@ -25,6 +26,32 @@
             content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .025;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
+
+        /* ── Particle canvas ── */
+        #particles {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+
+        /* ── Mouse glow ── */
+        .mouse-glow {
+            position: fixed; z-index: 0; pointer-events: none;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(var(--accent-rgb), .06) 0%, rgba(var(--accent-rgb), .02) 40%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: left .6s ease-out, top .6s ease-out;
+            will-change: left, top;
+        }
+
+        /* ── Scroll progress bar ── */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 3px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width .1s linear;
+            border-radius: 0 2px 2px 0;
+        }
+
         .container { position: relative; z-index: 1; max-width: 720px; width: 100%; margin: 0 auto; padding: 0 24px; }
 
         nav { padding: 32px 0 0; }
@@ -48,6 +75,15 @@
         .meta-card strong { font-weight: 600; color: var(--text); }
         .meta-card a { color: var(--accent); text-decoration: none; }
         .meta-card a:hover { text-decoration: underline; }
+
+        /* ── Scroll reveal ── */
+        section.reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity .7s ease, transform .7s cubic-bezier(.25,.46,.45,.94);
+        }
+        section.reveal.visible {
+            opacity: 1; transform: translateY(0);
+        }
 
         section { margin-bottom: 48px; }
         section h2 {
@@ -92,10 +128,16 @@
             section { margin-bottom: 36px; }
             th, td { padding: 8px 10px; font-size: .8rem; }
             footer { flex-direction: column; align-items: flex-start; }
+            .mouse-glow { display: none; }
+            #particles { opacity: .5; }
         }
     </style>
 </head>
 <body>
+
+<canvas id="particles"></canvas>
+<div class="mouse-glow" id="glow" aria-hidden="true"></div>
+<div class="progress-bar" id="progress"></div>
 
 <div class="container">
 
@@ -112,7 +154,7 @@
     </div>
 
     <!-- Section 1: Online Agent -->
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">01</span> Online Agent — File Analysis &amp; Web Search <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(5 pts)</span></h2>
 
         <h3>1.1 API Configuration</h3>
@@ -146,7 +188,7 @@ python online_agent.py --question "Explain the difference between Git merge and 
     </section>
 
     <!-- Section 2: Local Model -->
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">02</span> Local Model Deployment — Ollama <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(4 pts)</span></h2>
 
         <h3>2.1 Installation</h3>
@@ -177,7 +219,7 @@ python online_agent.py --question "Explain the difference between Git merge and 
     </section>
 
     <!-- Section 3: IDE Integration -->
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">03</span> IDE Integration — VSCode + Claude Code <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(3 pts)</span></h2>
 
         <h3>3.1 Setup</h3>
@@ -217,7 +259,7 @@ python online_agent.py --question "Explain the difference between Git merge and 
     </section>
 
     <!-- Section 4: Documentation & Reflection -->
-    <section>
+    <section class="reveal">
         <h2><span class="sec-num">04</span> Documentation &amp; Reflection <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(3 pts)</span></h2>
 
         <h3>4.1 Online vs Local Models — Comparison</h3>
@@ -262,5 +304,115 @@ python online_agent.py --question "Explain the difference between Git merge and 
     </footer>
 
 </div>
+
+<script>
+(function() {
+    /* ═══════════════════════════════════════════
+       Particle Background
+       ═══════════════════════════════════════════ */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const COUNT = 55;
+    const CONNECT = 120;
+    const RGB = [139, 105, 20];
+
+    let w, h;
+    function resize() {
+        w = canvas.width  = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor() { this.reset(true); }
+        reset(init) {
+            this.x = init ? Math.random() * w : (Math.random() < .5 ? -10 : w + 10);
+            this.y = init ? Math.random() * h : (Math.random() < .5 ? -10 : h + 10);
+            this.vx = (Math.random() - .5) * .3;
+            this.vy = (Math.random() - .5) * .3;
+            this.r = Math.random() * 1.3 + .5;
+            this.alpha = Math.random() * .3 + .12;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) this.reset(false);
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${RGB.join(',')},${this.alpha})`;
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+    function animate() {
+        ctx.clearRect(0, 0, w, h);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < CONNECT) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.strokeStyle = `rgba(${RGB.join(',')},${.04 * (1 - dist / CONNECT)})`;
+                    ctx.lineWidth = .5;
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    /* ═══════════════════════════════════════════
+       Mouse Glow
+       ═══════════════════════════════════════════ */
+    const glow = document.getElementById('glow');
+    let mx = -300, my = -300, cx = -300, cy = -300;
+    document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+    function follow() {
+        cx += (mx - cx) * .08;
+        cy += (my - cy) * .08;
+        glow.style.left = cx + 'px';
+        glow.style.top  = cy + 'px';
+        requestAnimationFrame(follow);
+    }
+    follow();
+
+    /* ═══════════════════════════════════════════
+       Scroll Progress Bar
+       ═══════════════════════════════════════════ */
+    const progress = document.getElementById('progress');
+    window.addEventListener('scroll', function() {
+        const st = window.scrollY;
+        const dh = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.width = dh > 0 ? (st / dh) * 100 + '%' : '0%';
+    });
+
+    /* ═══════════════════════════════════════════
+       Scroll Reveal
+       ═══════════════════════════════════════════ */
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: .1, rootMargin: '0px 0px -20px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+})();
+</script>
+
 </body>
 </html>
