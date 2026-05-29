@@ -3,43 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zhan Yibo's Personal Blog</title>
+    <title>Zhan Yibo &mdash; Personal Blog</title>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        h1 { color: #2c3e50; border-bottom: 2px solid #eee; }
-        h2 { color: #34495e; margin-top: 30px; }
-        .assignment-box { background: #f9f9f9; padding: 15px; border-radius: 8px; border-left: 5px solid #3498db; }
-        a { color: #3498db; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+        :root {
+            --bg:        #fdfaf5;
+            --surface:   #ffffff;
+            --text:      #2d2a26;
+            --muted:     #6b6560;
+            --accent:    #8b6914;
+            --accent-rgb: 139, 105, 20;
+            --border:    #e6e0d8;
+            --rule:      #d4cdc2;
+            --shadow:    0 1px 3px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.05);
+            --shadow-lg: 0 2px 8px rgba(0,0,0,.06), 0 16px 48px rgba(0,0,0,.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.65;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Subtle grain texture overlay ── */
+        body::before {
+            content: "";
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            opacity: .025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            position: relative; z-index: 1;
+            max-width: 720px; width: 100%; margin: 0 auto; padding: 0 24px;
+        }
+
+        /* ── Header ── */
+        header {
+            padding: 72px 0 48px;
+            border-bottom: 1px solid var(--rule);
+            margin-bottom: 56px;
+        }
+        header .overline {
+            font-size: .75rem; letter-spacing: .18em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 12px; font-weight: 600;
+        }
+        header h1 {
+            font-family: Georgia, "Times New Roman", "Noto Serif", serif;
+            font-size: clamp(1.8rem, 5vw, 2.6rem);
+            font-weight: 400; color: var(--text); line-height: 1.25; letter-spacing: -.01em;
+        }
+        header h1 em { font-style: italic; color: var(--accent); }
+        header .subtitle { color: var(--muted); font-size: .95rem; margin-top: 10px; }
+
+        /* ── Section title ── */
+        .section-label {
+            font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 20px; font-weight: 600;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .section-label::after {
+            content: ""; flex: 1; height: 1px; background: var(--rule);
+        }
+
+        /* ── Assignment cards ── */
+        .cards { display: flex; flex-direction: column; gap: 28px; margin-bottom: 64px; }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 28px 32px;
+            position: relative;
+            transition: transform .25s ease, box-shadow .25s ease;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            grid-template-rows: auto auto auto;
+            gap: 6px 24px;
+            align-items: baseline;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        /* Accent strip on hover */
+        .card::before {
+            content: "";
+            position: absolute; left: 0; top: 0; bottom: 0; width: 0;
+            background: var(--accent);
+            transition: width .3s ease;
+        }
+        .card:hover::before { width: 3px; }
+
+        .card .card-num {
+            grid-row: 1 / span 3; grid-column: 1;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 3rem; color: var(--border); line-height: 1;
+            align-self: start; margin-top: -4px;
+            transition: color .3s ease;
+        }
+        .card:hover .card-num { color: rgba(var(--accent-rgb), .15); }
+
+        .card h3 {
+            grid-row: 1; grid-column: 2;
+            font-family: Georgia, "Times New Roman", "Noto Serif", serif;
+            font-size: 1.2rem; font-weight: 400; color: var(--text);
+        }
+        .card p {
+            grid-row: 2; grid-column: 2;
+            color: var(--muted); font-size: .9rem; line-height: 1.5;
+        }
+        .card .card-links {
+            grid-row: 3; grid-column: 2;
+            display: flex; flex-wrap: wrap; gap: 16px; margin-top: 4px;
+        }
+        .card .card-links a {
+            font-size: .85rem; font-weight: 500; color: var(--accent); text-decoration: none;
+            padding-bottom: 1px; border-bottom: 1px solid transparent;
+            transition: border-color .2s;
+        }
+        .card .card-links a:hover { border-bottom-color: var(--accent); }
+
+        .card .card-arrow {
+            grid-row: 1 / span 3; grid-column: 3;
+            align-self: center; color: var(--border); font-size: 1.2rem;
+            transition: color .3s ease, transform .3s ease;
+        }
+        .card:hover .card-arrow { color: var(--accent); transform: translateX(4px); }
+
+        /* ── Footer ── */
+        footer {
+            margin-top: auto; padding: 40px 0 32px;
+            border-top: 1px solid var(--rule);
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px;
+            font-size: .8rem; color: var(--muted);
+        }
+        footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+        footer a:hover { color: var(--accent); }
+
+        /* ── Responsive ── */
+        @media (max-width: 560px) {
+            header { padding: 48px 0 36px; margin-bottom: 36px; }
+            .card { padding: 20px 24px; grid-template-columns: 1fr; gap: 4px 0; }
+            .card .card-num { display: none; }
+            .card .card-arrow { display: none; }
+            .card .card-links { flex-direction: column; gap: 8px; }
+            footer { flex-direction: column; align-items: flex-start; }
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to Zhan Yibo's Blog</h1>
-    <p>This is a static website created for the <strong>Fundamentals of Software Technology</strong> course (2026).</p>
 
-    <h2>Project Showcase</h2>
+<div class="container">
 
-    <div class="assignment-box">
-        <h3>Assignment 1: Remote Development</h3>
-        <p>Research and implementation of radar signal processing environments.</p>
-        <p>
-            View Report:
-            <a href="report.md"><strong>[Markdown]</strong></a> |
-            <a href="report.pdf" target="_blank"><strong>[PDF Version]</strong></a>
-        </p>
+    <header>
+        <p class="overline">Fundamentals of Software Technology &middot; 2026</p>
+        <h1>Zhan <em>Yibo</em>'s<br>Personal Blog</h1>
+        <p class="subtitle">A static portfolio documenting coursework in software engineering,<br>version control, and remote development workflows.</p>
+    </header>
+
+    <p class="section-label">Project Showcase</p>
+
+    <div class="cards">
+
+        <a href="report.pdf" target="_blank" style="text-decoration:none;color:inherit;">
+        <div class="card" style="cursor:pointer;">
+            <span class="card-num">01</span>
+            <h3>Remote Development</h3>
+            <p>Research and implementation of radar signal processing environments &mdash; exploring WSL-based toolchains and cross-platform development.</p>
+            <div class="card-links">
+                <a href="report.md">Read Markdown</a>
+                <a href="report.pdf" target="_blank">View PDF &nearr;</a>
+            </div>
+            <span class="card-arrow">&rarr;</span>
+        </div>
+        </a>
+
+        <a href="Assignment2_report.html" style="text-decoration:none;color:inherit;">
+        <div class="card" style="cursor:pointer;">
+            <span class="card-num">02</span>
+            <h3>Static Site &amp; Git Management</h3>
+            <p>Deployment of this blog using GitHub Pages with structured version control &mdash; from local repository initialization to live hosting.</p>
+            <div class="card-links">
+                <a href="Assignment2_report.html">Read Deployment Report</a>
+            </div>
+            <span class="card-arrow">&rarr;</span>
+        </div>
+        </a>
+
     </div>
 
-    <div class="assignment-box" style="margin-top: 20px; border-left-color: #27ae60;">
-        <h3>Assignment 2: Static Site &amp; Git Management</h3>
-        <p>Deployment of this blog and version control history.</p>
-        <p>
-            View Deployment Report:
-            <a href="Assignment2_report.html"><strong>[Deployment Report]</strong></a>
-        </p>
-    </div>
-
-    <footer style="margin-top: 50px; font-size: 0.8em; color: #7f8c8d;">
-        <p>Student Name: Zhan Yibo | Student ID: ZY2557213</p>
+    <footer>
+        <span>Zhan Yibo &nbsp;&middot;&nbsp; ZY2557213</span>
+        <a href="https://deerflow.tech" target="_blank" title="Created By Deerflow">&#9670;&nbsp;Deerflow</a>
     </footer>
+
+</div>
+
 </body>
 </html>

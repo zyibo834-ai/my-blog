@@ -3,102 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment 2 Report - Zhan Yibo</title>
+    <title>Assignment 2 Report &mdash; Zhan Yibo</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            line-height: 1.7;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-            color: #333;
+        :root {
+            --bg:        #fdfaf5;
+            --surface:   #ffffff;
+            --text:      #2d2a26;
+            --muted:     #6b6560;
+            --accent:    #8b6914;
+            --accent-rgb: 139, 105, 20;
+            --border:    #e6e0d8;
+            --rule:      #d4cdc2;
+            --shadow:    0 1px 3px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.05);
         }
-        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-        h2 { color: #34495e; margin-top: 35px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        a { color: #3498db; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        .meta { color: #7f8c8d; font-size: 0.95em; margin-bottom: 30px; }
-        .meta a { color: #2c3e50; font-weight: bold; }
-        ul, ol { padding-left: 1.5em; }
-        li { margin-bottom: 8px; }
-        .back-link { display: inline-block; margin-bottom: 25px; font-size: 0.9em; }
-        footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; font-size: 0.8em; color: #7f8c8d; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            opacity: .025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .container {
+            position: relative; z-index: 1;
+            max-width: 720px; width: 100%; margin: 0 auto; padding: 0 24px;
+        }
+
+        /* ── Back link ── */
+        nav { padding: 32px 0 0; }
+        nav a {
+            font-size: .8rem; color: var(--muted); text-decoration: none;
+            letter-spacing: .03em; transition: color .2s;
+        }
+        nav a:hover { color: var(--accent); }
+
+        /* ── Article header ── */
+        .report-header {
+            padding: 40px 0 44px;
+            border-bottom: 1px solid var(--rule);
+            margin-bottom: 48px;
+        }
+        .report-header .overline {
+            font-size: .7rem; letter-spacing: .18em; text-transform: uppercase;
+            color: var(--accent); font-weight: 600; margin-bottom: 8px;
+        }
+        .report-header h1 {
+            font-family: Georgia, "Times New Roman", "Noto Serif", serif;
+            font-size: clamp(1.6rem, 4.5vw, 2.2rem);
+            font-weight: 400; line-height: 1.25; letter-spacing: -.01em;
+            margin-bottom: 24px;
+        }
+        .report-header h1 em { font-style: italic; color: var(--accent); }
+
+        .meta-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px 22px;
+            display: flex; flex-wrap: wrap; gap: 8px 32px;
+            font-size: .85rem; box-shadow: var(--shadow);
+        }
+        .meta-card span { color: var(--muted); }
+        .meta-card strong { font-weight: 600; color: var(--text); }
+        .meta-card a { color: var(--accent); text-decoration: none; }
+        .meta-card a:hover { text-decoration: underline; }
+
+        /* ── Sections ── */
+        section { margin-bottom: 48px; }
+
+        section h2 {
+            font-family: Georgia, "Times New Roman", "Noto Serif", serif;
+            font-size: 1.15rem; font-weight: 400; color: var(--text);
+            margin-bottom: 14px;
+            display: flex; align-items: baseline; gap: 10px;
+        }
+        section h2 .sec-num {
+            font-size: .7rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--accent); font-weight: 600; letter-spacing: .08em;
+            min-width: 22px;
+        }
+
+        section p  { color: var(--text); margin-bottom: 12px; font-size: .95rem; }
+        section ul, section ol {
+            padding-left: 1.4em; font-size: .95rem; color: var(--text);
+        }
+        section li { margin-bottom: 7px; }
+        section li strong { color: var(--text); }
+        section ul ul, section ol ul { margin-top: 6px; font-size: .92rem; color: var(--muted); }
+
+        /* ── Numbered list in section 4 ── */
+        .commit-steps {
+            list-style: none; padding-left: 0; counter-reset: step;
+        }
+        .commit-steps li {
+            counter-increment: step; padding-left: 36px; position: relative; margin-bottom: 14px;
+        }
+        .commit-steps li::before {
+            content: "0" counter(step);
+            position: absolute; left: 0; top: -1px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: .82rem; color: var(--accent); font-weight: 600;
+        }
+
+        /* ── Footer ── */
+        footer {
+            margin-top: 56px; padding: 32px 0 36px;
+            border-top: 1px solid var(--rule);
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 12px;
+            font-size: .8rem; color: var(--muted);
+        }
+        footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+        footer a:hover { color: var(--accent); }
+
+        @media (max-width: 560px) {
+            .report-header { padding: 28px 0 32px; margin-bottom: 32px; }
+            .meta-card { flex-direction: column; gap: 4px; }
+            section { margin-bottom: 36px; }
+            footer { flex-direction: column; align-items: flex-start; }
+        }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-link">&larr; Back to Home</a>
+<div class="container">
 
-    <h1>Assignment 2: Static Website Deployment and Git Management</h1>
+    <nav><a href="index.html">&larr;&nbsp;Back to Home</a></nav>
 
-    <p class="meta">
-        <strong>Student Name:</strong> Zhan Yibo<br>
-        <strong>Student ID:</strong> ZY2557213<br>
-        <strong>Website URL:</strong> <a href="https://zyibo834-ai.github.io/my-blog/" target="_blank">https://zyibo834-ai.github.io/my-blog/</a>
-    </p>
+    <div class="report-header">
+        <p class="overline">Assignment 2 &middot; Deployment Report</p>
+        <h1>Static Website <em>Deployment</em><br>and Git Management</h1>
+        <div class="meta-card">
+            <span><strong>Student:</strong>&nbsp;Zhan Yibo</span>
+            <span><strong>ID:</strong>&nbsp;ZY2557213</span>
+            <span><strong>Site:</strong>&nbsp;<a href="https://zyibo834-ai.github.io/my-blog/" target="_blank">zyibo834-ai.github.io/my-blog</a></span>
+        </div>
+    </div>
 
-    <h2>1. Project Overview</h2>
-    <p>
-        The objective of this assignment was to build a personal static blog and deploy it using GitHub Pages.
-        This project demonstrates proficiency in using Git for version control and managing remote deployment workflows.
-    </p>
+    <section>
+        <h2><span class="sec-num">01</span> Project Overview</h2>
+        <p>
+            The objective of this assignment was to build a personal static blog and deploy it using GitHub Pages.
+            This project demonstrates proficiency in using Git for version control and managing remote deployment workflows.
+        </p>
+    </section>
 
-    <h2>2. Tools & Methodology</h2>
-    <ul>
-        <li><strong>Operating System:</strong> Windows Subsystem for Linux (WSL) - Ubuntu.</li>
-        <li><strong>Version Control:</strong> Git.</li>
-        <li><strong>Hosting Service:</strong> GitHub Pages.</li>
-        <li><strong>Development:</strong> HTML5/CSS3 for simple and accessible web design.</li>
-    </ul>
+    <section>
+        <h2><span class="sec-num">02</span> Tools &amp; Methodology</h2>
+        <ul>
+            <li><strong>Operating System:</strong> Windows Subsystem for Linux (WSL) &mdash; Ubuntu.</li>
+            <li><strong>Version Control:</strong> Git.</li>
+            <li><strong>Hosting Service:</strong> GitHub Pages.</li>
+            <li><strong>Development:</strong> HTML5 / CSS3 for simple and accessible web design.</li>
+        </ul>
+    </section>
 
-    <h2>3. Rationale for Tool Selection</h2>
-    <p>For this assignment, I chose <strong>Plain HTML/CSS</strong> and <strong>GitHub Pages</strong> for the following reasons:</p>
-    <ul>
-        <li>
-            <strong>GitHub Pages:</strong> It provides a seamless integration with Git repositories, allowing for
-            "Infrastructure as Code" where every change to the website is tracked. It is also a standard in the industry
-            for hosting project documentation and personal portfolios.
-        </li>
-        <li>
-            <strong>Plain HTML/CSS (vs. Frameworks like Jekyll/Hugo):</strong>
-            <ul>
-                <li><strong>Transparency:</strong> As this course focuses on the <em>Fundamentals of Software Technology</em>,
-                    using raw HTML helped me better understand the underlying structure of the web and the DOM.</li>
-                <li><strong>Performance:</strong> A pure static site has zero build time and near-instant loading speeds,
-                    which fits the minimalist nature of this academic project.</li>
-                <li><strong>Ease of Integration:</strong> It allowed for direct linking to my Assignment 1 Markdown and PDF
-                    files without complex directory routing issues often found in static site generators.</li>
-            </ul>
-        </li>
-    </ul>
+    <section>
+        <h2><span class="sec-num">03</span> Rationale for Tool Selection</h2>
+        <p>For this assignment, I chose <strong>Plain HTML/CSS</strong> and <strong>GitHub Pages</strong> for the following reasons:</p>
+        <ul>
+            <li>
+                <strong>GitHub Pages:</strong> It provides seamless integration with Git repositories, allowing for
+                &ldquo;Infrastructure as Code&rdquo; where every change to the website is tracked. It is also a standard
+                in the industry for hosting project documentation and personal portfolios.
+            </li>
+            <li>
+                <strong>Plain HTML/CSS (vs. frameworks like Jekyll/Hugo):</strong>
+                <ul>
+                    <li><strong>Transparency:</strong> As this course focuses on the <em>Fundamentals of Software Technology</em>,
+                        using raw HTML helped me better understand the underlying structure of the web and the DOM.</li>
+                    <li><strong>Performance:</strong> A pure static site has zero build time and near-instant loading speeds,
+                        which fits the minimalist nature of this academic project.</li>
+                    <li><strong>Ease of Integration:</strong> It allowed for direct linking to my Assignment 1 Markdown and PDF
+                        files without complex directory routing issues often found in static site generators.</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
 
-    <h2>4. Git Commit Rationale</h2>
-    <p>I followed a structured 5-step commit process to maintain a clear project history:</p>
-    <ol>
-        <li><strong>Initial setup:</strong> Built the foundational HTML structure.</li>
-        <li><strong>Integration:</strong> Imported the Markdown and PDF reports from Assignment 1.</li>
-        <li><strong>Navigation:</strong> Created hyperlinks to ensure all documents are accessible from the homepage.</li>
-        <li><strong>Documentation:</strong> Authored this deployment report to explain the project details.</li>
-        <li><strong>Final Polish:</strong> Enhanced the UI/UX with internal CSS and verified all links.</li>
-    </ol>
+    <section>
+        <h2><span class="sec-num">04</span> Git Commit Rationale</h2>
+        <p>I followed a structured 5-step commit process to maintain a clear project history:</p>
+        <ol class="commit-steps">
+            <li><strong>Initial setup</strong> &mdash; Built the foundational HTML structure.</li>
+            <li><strong>Integration</strong> &mdash; Imported the Markdown and PDF reports from Assignment&nbsp;1.</li>
+            <li><strong>Navigation</strong> &mdash; Created hyperlinks to ensure all documents are accessible from the homepage.</li>
+            <li><strong>Documentation</strong> &mdash; Authored this deployment report to explain the project details.</li>
+            <li><strong>Final Polish</strong> &mdash; Enhanced the UI/UX with internal CSS and verified all links.</li>
+        </ol>
+    </section>
 
-    <h2>5. Deployment Steps</h2>
-    <ol>
-        <li>Initialized the repository locally and managed files through the command line.</li>
-        <li>Created a remote repository on GitHub.</li>
-        <li>Enabled GitHub Pages via the repository settings, using the 'main' branch as the source.</li>
-    </ol>
+    <section>
+        <h2><span class="sec-num">05</span> Deployment Steps</h2>
+        <ol>
+            <li>Initialized the repository locally and managed files through the command line.</li>
+            <li>Created a remote repository on GitHub.</li>
+            <li>Enabled GitHub Pages via the repository settings, using the <code>main</code> branch as the source.</li>
+        </ol>
+    </section>
 
-    <h2>6. Challenges & Solutions</h2>
-    <p>
-        During the deployment, I faced network connectivity issues with the GitHub API from my local environment.
-        I resolved this by manually syncing and refining the commit history through the GitHub web interface to ensure
-        the project met the versioning requirements.
-    </p>
+    <section>
+        <h2><span class="sec-num">06</span> Challenges &amp; Solutions</h2>
+        <p>
+            During the deployment, I faced network connectivity issues with the GitHub API from my local environment.
+            I resolved this by manually syncing and refining the commit history through the GitHub web interface to ensure
+            the project met the versioning requirements.
+        </p>
+    </section>
 
     <footer>
-        <p>Student Name: Zhan Yibo | Student ID: ZY2557213</p>
+        <span>Zhan Yibo &nbsp;&middot;&nbsp; ZY2557213</span>
+        <a href="https://deerflow.tech" target="_blank" title="Created By Deerflow">&#9670;&nbsp;Deerflow</a>
     </footer>
+
+</div>
 
 </body>
 </html>
