@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>online_agent.py — Zhan Yibo</title>
+<style>
+:root {
+    --bg:       #fdfaf5;
+    --surface:  #ffffff;
+    --text:     #2d2a26;
+    --muted:    #6b6560;
+    --accent:   #8b6914;
+    --border:   #e6e0d8;
+    --rule:     #d4cdc2;
+    --code-bg:  #f8f6f1;
+    --line-num: #c5bfb2;
+    --kw:       #8b6914;
+    --str:      #3d7a3d;
+    --cmt:      #999590;
+    --fn:       #5b4cc4;
+    --num:      #c2612b;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh;
+}
+body::before {
+    content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.container { position:relative; z-index:1; max-width: 820px; width:100%; margin:0 auto; padding:0 24px; }
+
+nav { padding:32px 0 0; }
+nav a { font-size:.8rem; color:var(--muted); text-decoration:none; letter-spacing:.03em; }
+nav a:hover { color:var(--accent); }
+
+header { padding:40px 0 36px; border-bottom:1px solid var(--rule); margin-bottom:36px; }
+header .overline { font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:8px; }
+header h1 { font-family:Georgia,"Times New Roman","Noto Serif",serif; font-size:clamp(1.4rem,4vw,1.8rem); font-weight:400; line-height:1.25; }
+header h1 em { font-style:italic; color:var(--accent); }
+header p { color:var(--muted); font-size:.9rem; margin-top:8px; }
+
+.code-wrapper {
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    overflow-x:auto; box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.05);
+    margin-bottom:48px;
+}
+.code-header {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 18px; border-bottom:1px solid var(--border); background:var(--code-bg);
+    font-size:.78rem; color:var(--muted);
+}
+.code-header span { font-weight:600; color:var(--text); }
+
+table.code-table {
+    width:100%; border-collapse:collapse; font-family: "SF Mono","Fira Code","Cascadia Code",Consolas,monospace;
+    font-size:.82rem; line-height:1.55;
+}
+table.code-table td {
+    padding:1px 0; vertical-align:top;
+}
+table.code-table td.ln {
+    width:52px; text-align:right; padding-right:14px; color:var(--line-num);
+    user-select:none; -webkit-user-select:none; font-size:.78rem;
+    border-right:1px solid var(--border); background:var(--code-bg);
+}
+table.code-table td.code {
+    padding-left:16px; white-space:pre;
+}
+
+/* Syntax */
+.k  { color: var(--kw);  font-weight: 600; }
+.s  { color: var(--str); }
+.c  { color: var(--cmt); font-style: italic; }
+.nf { color: var(--fn);  font-weight: 600; }
+.m  { color: var(--num); }
+.bp { color: var(--kw); }
+.nd { color: var(--fn); }
+
+footer {
+    padding:32px 0 36px; border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    font-size:.8rem; color:var(--muted);
+}
+footer a { color:var(--muted); text-decoration:none; }
+footer a:hover { color:var(--accent); }
+
+@media (max-width:600px) {
+    table.code-table { font-size:.75rem; }
+    table.code-table td.ln { width:40px; padding-right:8px; }
+    table.code-table td.code { padding-left:8px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<nav><a href="Assignment3_report.html">&larr;&nbsp;Back to Assignment&nbsp;3 Report</a></nav>
+
+<header>
+    <p class="overline">Assignment 3 &middot; Online Agent</p>
+    <h1><em>online_agent.py</em> &mdash; Source Code</h1>
+    <p>Python script that uses an OpenAI-compatible API to analyze files and answer questions.</p>
+</header>
+
+<div class="code-wrapper">
+<div class="code-header">
+    <span>online_agent.py</span>
+    <span>116 lines</span>
+</div>
+<table class="code-table">
+<tr><td class="ln">1</td><td class="code"><span class="s">"""</span></td></tr>
+<tr><td class="ln">2</td><td class="code"><span class="s">Assignment 3 — Online Agent: File Analysis &amp; Web Search</span></td></tr>
+<tr><td class="ln">3</td><td class="code"><span class="s">Uses an OpenAI-compatible API (DeepSeek / Qwen / OpenAI) to:</span></td></tr>
+<tr><td class="ln">4</td><td class="code"><span class="s">  1. Analyze a local file (Markdown, PDF, code, etc.)</span></td></tr>
+<tr><td class="ln">5</td><td class="code"><span class="s">  2. Answer questions about its contents</span></td></tr>
+<tr><td class="ln">6</td><td class="code"><span class="s"></span></td></tr>
+<tr><td class="ln">7</td><td class="code"><span class="s">Usage:</span></td></tr>
+<tr><td class="ln">8</td><td class="code"><span class="s">  python online_agent.py --file report.md</span></td></tr>
+<tr><td class="ln">9</td><td class="code"><span class="s">  python online_agent.py --file report.md --question "Summarize the key findings"</span></td></tr>
+<tr><td class="ln">10</td><td class="code"><span class="s">  python online_agent.py --question "What is Python?"  (web-search mode without file)</span></td></tr>
+<tr><td class="ln">11</td><td class="code"><span class="s">"""</span></td></tr>
+<tr><td class="ln">12</td><td class="code"></td></tr>
+<tr><td class="ln">13</td><td class="code"><span class="k">import</span> os</td></tr>
+<tr><td class="ln">14</td><td class="code"><span class="k">import</span> sys</td></tr>
+<tr><td class="ln">15</td><td class="code"><span class="k">import</span> json</td></tr>
+<tr><td class="ln">16</td><td class="code"><span class="k">import</span> argparse</td></tr>
+<tr><td class="ln">17</td><td class="code"><span class="k">import</span> urllib.request</td></tr>
+<tr><td class="ln">18</td><td class="code"><span class="k">import</span> urllib.error</td></tr>
+<tr><td class="ln">19</td><td class="code"></td></tr>
+<tr><td class="ln">20</td><td class="code"></td></tr>
+<tr><td class="ln">21</td><td class="code"><span class="c"># ── Configuration ────────────────────────────</span></td></tr>
+<tr><td class="ln">22</td><td class="code"><span class="c"># Set your API key via environment variable,</span></td></tr>
+<tr><td class="ln">23</td><td class="code"><span class="c"># or replace the placeholder below.</span></td></tr>
+<tr><td class="ln">24</td><td class="code">API_KEY = os.environ.get(<span class="s">"LLM_API_KEY"</span>, <span class="s">"your-api-key-here"</span>)</td></tr>
+<tr><td class="ln">25</td><td class="code">API_URL = os.environ.get(<span class="s">"LLM_API_URL"</span>, <span class="s">"https://api.deepseek.com/v1/chat/completions"</span>)</td></tr>
+<tr><td class="ln">26</td><td class="code">MODEL   = os.environ.get(<span class="s">"LLM_MODEL"</span>,   <span class="s">"deepseek-chat"</span>)</td></tr>
+<tr><td class="ln">27</td><td class="code"></td></tr>
+<tr><td class="ln">28</td><td class="code"></td></tr>
+<tr><td class="ln">29</td><td class="code"><span class="k">def</span> <span class="nf">call_llm</span>(messages: list, temperature: float = <span class="m">0.3</span>) -&gt; str:</td></tr>
+<tr><td class="ln">30</td><td class="code">    <span class="s">"""Send a chat completion request to the LLM API."""</span></td></tr>
+<tr><td class="ln">31</td><td class="code">    payload = json.dumps({</td></tr>
+<tr><td class="ln">32</td><td class="code">        <span class="s">"model"</span>: MODEL,</td></tr>
+<tr><td class="ln">33</td><td class="code">        <span class="s">"messages"</span>: messages,</td></tr>
+<tr><td class="ln">34</td><td class="code">        <span class="s">"temperature"</span>: temperature,</td></tr>
+<tr><td class="ln">35</td><td class="code">        <span class="s">"max_tokens"</span>: <span class="m">2048</span>,</td></tr>
+<tr><td class="ln">36</td><td class="code">    }).encode(<span class="s">"utf-8"</span>)</td></tr>
+<tr><td class="ln">37</td><td class="code"></td></tr>
+<tr><td class="ln">38</td><td class="code">    req = urllib.request.Request(API_URL, data=payload, method=<span class="s">"POST"</span>)</td></tr>
+<tr><td class="ln">39</td><td class="code">    req.add_header(<span class="s">"Content-Type"</span>, <span class="s">"application/json"</span>)</td></tr>
+<tr><td class="ln">40</td><td class="code">    req.add_header(<span class="s">"Authorization"</span>, <span class="s">f"Bearer {API_KEY}"</span>)</td></tr>
+<tr><td class="ln">41</td><td class="code"></td></tr>
+<tr><td class="ln">42</td><td class="code">    <span class="k">try</span>:</td></tr>
+<tr><td class="ln">43</td><td class="code">        <span class="k">with</span> urllib.request.urlopen(req, timeout=<span class="m">60</span>) <span class="k">as</span> resp:</td></tr>
+<tr><td class="ln">44</td><td class="code">            body = json.loads(resp.read().decode())</td></tr>
+<tr><td class="ln">45</td><td class="code">            <span class="k">return</span> body[<span class="s">"choices"</span>][<span class="m">0</span>][<span class="s">"message"</span>][<span class="s">"content"</span>]</td></tr>
+<tr><td class="ln">46</td><td class="code">    <span class="k">except</span> urllib.error.HTTPError <span class="k">as</span> e:</td></tr>
+<tr><td class="ln">47</td><td class="code">        <span class="k">return</span> <span class="s">f"[API Error {e.code}] {e.read().decode()}"</span></td></tr>
+<tr><td class="ln">48</td><td class="code">    <span class="k">except</span> Exception <span class="k">as</span> e:</td></tr>
+<tr><td class="ln">49</td><td class="code">        <span class="k">return</span> <span class="s">f"[Error] {str(e)}"</span></td></tr>
+<tr><td class="ln">50</td><td class="code"></td></tr>
+<tr><td class="ln">51</td><td class="code"></td></tr>
+<tr><td class="ln">52</td><td class="code"><span class="k">def</span> <span class="nf">read_file</span>(path: str, max_chars: int = <span class="m">8000</span>) -&gt; str:</td></tr>
+<tr><td class="ln">53</td><td class="code">    <span class="s">"""Read a text file, truncating if too long."""</span></td></tr>
+<tr><td class="ln">54</td><td class="code">    <span class="k">try</span>:</td></tr>
+<tr><td class="ln">55</td><td class="code">        <span class="k">with</span> <span class="bp">open</span>(path, <span class="s">"r"</span>, encoding=<span class="s">"utf-8"</span>, errors=<span class="s">"replace"</span>) <span class="k">as</span> f:</td></tr>
+<tr><td class="ln">56</td><td class="code">            content = f.read()</td></tr>
+<tr><td class="ln">57</td><td class="code">        <span class="k">if</span> <span class="bp">len</span>(content) &gt; max_chars:</td></tr>
+<tr><td class="ln">58</td><td class="code">            content = content[:max_chars] + <span class="s">"\n\n[... truncated due to length ...]"</span></td></tr>
+<tr><td class="ln">59</td><td class="code">        <span class="k">return</span> content</td></tr>
+<tr><td class="ln">60</td><td class="code">    <span class="k">except</span> Exception <span class="k">as</span> e:</td></tr>
+<tr><td class="ln">61</td><td class="code">        <span class="k">return</span> <span class="s">f"[Cannot read file] {e}"</span></td></tr>
+<tr><td class="ln">62</td><td class="code"></td></tr>
+<tr><td class="ln">63</td><td class="code"></td></tr>
+<tr><td class="ln">64</td><td class="code"><span class="k">def</span> <span class="nf">analyze_file</span>(file_path: str, user_question: str | None) -&gt; str:</td></tr>
+<tr><td class="ln">65</td><td class="code">    <span class="s">"""Read a file and ask the LLM to analyze it."""</span></td></tr>
+<tr><td class="ln">66</td><td class="code">    content = read_file(file_path)</td></tr>
+<tr><td class="ln">67</td><td class="code">    question = user_question <span class="k">or</span> <span class="s">"Please summarize this file and highlight the key points."</span></td></tr>
+<tr><td class="ln">68</td><td class="code"></td></tr>
+<tr><td class="ln">69</td><td class="code">    messages = [</td></tr>
+<tr><td class="ln">70</td><td class="code">        {<span class="s">"role"</span>: <span class="s">"system"</span>, <span class="s">"content"</span>: <span class="s">"You are a helpful assistant. Analyze the provided document and answer the user's question accurately and concisely."</span>},</td></tr>
+<tr><td class="ln">71</td><td class="code">        {<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">f"Document content:\n\n{content}\n\n---\n\nQuestion: {question}"</span>},</td></tr>
+<tr><td class="ln">72</td><td class="code">    ]</td></tr>
+<tr><td class="ln">73</td><td class="code">    <span class="k">return</span> call_llm(messages)</td></tr>
+<tr><td class="ln">74</td><td class="code"></td></tr>
+<tr><td class="ln">75</td><td class="code"></td></tr>
+<tr><td class="ln">76</td><td class="code"><span class="k">def</span> <span class="nf">web_search_agent</span>(question: str) -&gt; str:</td></tr>
+<tr><td class="ln">77</td><td class="code">    <span class="s">"""Ask the LLM a question that may require general knowledge (simulates web search via LLM)."""</span></td></tr>
+<tr><td class="ln">78</td><td class="code">    messages = [</td></tr>
+<tr><td class="ln">79</td><td class="code">        {<span class="s">"role"</span>: <span class="s">"system"</span>, <span class="s">"content"</span>: (</td></tr>
+<tr><td class="ln">80</td><td class="code">            <span class="s">"You are a helpful research assistant with access to general knowledge up to 2024. "</span></td></tr>
+<tr><td class="ln">81</td><td class="code">            <span class="s">"Answer the user's question thoroughly. If you are unsure about specific details, "</span></td></tr>
+<tr><td class="ln">82</td><td class="code">            <span class="s">"state your level of confidence clearly. Structure your answer with bullet points "</span></td></tr>
+<tr><td class="ln">83</td><td class="code">            <span class="s">"when listing multiple items."</span></td></tr>
+<tr><td class="ln">84</td><td class="code">        )},</td></tr>
+<tr><td class="ln">85</td><td class="code">        {<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: question},</td></tr>
+<tr><td class="ln">86</td><td class="code">    ]</td></tr>
+<tr><td class="ln">87</td><td class="code">    <span class="k">return</span> call_llm(messages)</td></tr>
+<tr><td class="ln">88</td><td class="code"></td></tr>
+<tr><td class="ln">89</td><td class="code"></td></tr>
+<tr><td class="ln">90</td><td class="code"><span class="k">def</span> <span class="nf">main</span>():</td></tr>
+<tr><td class="ln">91</td><td class="code">    parser = argparse.ArgumentParser(</td></tr>
+<tr><td class="ln">92</td><td class="code">        description=<span class="s">"Online LLM Agent — File Analysis &amp; Web Search"</span></td></tr>
+<tr><td class="ln">93</td><td class="code">    )</td></tr>
+<tr><td class="ln">94</td><td class="code">    parser.add_argument(<span class="s">"--file"</span>, <span class="s">"-f"</span>, help=<span class="s">"Path to a file to analyze"</span>)</td></tr>
+<tr><td class="ln">95</td><td class="code">    parser.add_argument(<span class="s">"--question"</span>, <span class="s">"-q"</span>, help=<span class="s">"Question to ask about the file or general knowledge"</span>)</td></tr>
+<tr><td class="ln">96</td><td class="code">    args = parser.parse_args()</td></tr>
+<tr><td class="ln">97</td><td class="code"></td></tr>
+<tr><td class="ln">98</td><td class="code">    <span class="k">if</span> <span class="k">not</span> args.file <span class="k">and</span> <span class="k">not</span> args.question:</td></tr>
+<tr><td class="ln">99</td><td class="code">        parser.print_help()</td></tr>
+<tr><td class="ln">100</td><td class="code">        <span class="bp">print</span>(<span class="s">"\nExample: python online_agent.py --file report.md --question \"Summarize this\""</span>)</td></tr>
+<tr><td class="ln">101</td><td class="code">        sys.exit(<span class="m">1</span>)</td></tr>
+<tr><td class="ln">102</td><td class="code"></td></tr>
+<tr><td class="ln">103</td><td class="code">    <span class="bp">print</span>(<span class="s">f"Model: {MODEL}"</span>)</td></tr>
+<tr><td class="ln">104</td><td class="code">    <span class="bp">print</span>(<span class="s">f"API:   {API_URL}"</span>)</td></tr>
+<tr><td class="ln">105</td><td class="code">    <span class="bp">print</span>(<span class="s">"-"</span> * <span class="m">50</span>)</td></tr>
+<tr><td class="ln">106</td><td class="code"></td></tr>
+<tr><td class="ln">107</td><td class="code">    <span class="k">if</span> args.file:</td></tr>
+<tr><td class="ln">108</td><td class="code">        <span class="bp">print</span>(<span class="s">f"Analyzing file: {args.file}"</span>)</td></tr>
+<tr><td class="ln">109</td><td class="code">        result = analyze_file(args.file, args.question)</td></tr>
+<tr><td class="ln">110</td><td class="code">    <span class="k">else</span>:</td></tr>
+<tr><td class="ln">111</td><td class="code">        <span class="bp">print</span>(<span class="s">f"Question: {args.question}"</span>)</td></tr>
+<tr><td class="ln">112</td><td class="code">        result = web_search_agent(args.question)</td></tr>
+<tr><td class="ln">113</td><td class="code"></td></tr>
+<tr><td class="ln">114</td><td class="code">    <span class="bp">print</span>(<span class="s">"-"</span> * <span class="m">50</span>)</td></tr>
+<tr><td class="ln">115</td><td class="code">    <span class="bp">print</span>(result)</td></tr>
+<tr><td class="ln">116</td><td class="code"></td></tr>
+<tr><td class="ln">117</td><td class="code"><span class="k">if</span> __name__ == <span class="s">"__main__"</span>:</td></tr>
+<tr><td class="ln">118</td><td class="code">    main()</td></tr>
+</table>
+</div>
+
+<footer>
+    <span>Zhan Yibo &nbsp;&middot;&nbsp; ZY2557213</span>
+    <a href="https://deerflow.tech" target="_blank" title="Created By Deerflow">&#9670;&nbsp;Deerflow</a>
+</footer>
+
+</div>
+</body>
+</html>
