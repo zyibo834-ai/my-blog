@@ -135,6 +135,18 @@
         th { font-weight: 600; font-size: .8rem; letter-spacing: .05em; color: var(--muted); text-transform: uppercase; }
         td { color: var(--text); }
 
+        /* ── Screenshots ── */
+        .screenshot {
+            width: 100%; max-width: 100%;
+            border: 1px solid var(--border); border-radius: 6px;
+            box-shadow: var(--shadow);
+            margin-bottom: 16px; display: block;
+        }
+        .screenshot + .caption {
+            font-size: .78rem; color: var(--muted); text-align: center;
+            margin-top: -10px; margin-bottom: 18px; font-style: italic;
+        }
+
         .challenge { margin-bottom: 10px; }
         .challenge strong { color: var(--accent); }
 
@@ -227,6 +239,8 @@ python online_agent.py --question "Explain the difference between Git merge and 
         <p>Successfully pulled <strong>Qwen2:1.5B</strong>, a lightweight open-source model, after resolving network issues:</p>
         <div class="code-block"><pre><code>ollama pull qwen2:1.5b
 ollama run qwen2:1.5b</code></pre></div>
+        <img class="screenshot" src="screenshots/ollama_pull.png" alt="Ollama pull qwen2:1.5b successful download">
+        <p class="caption">Figure 1 — Downloading Qwen2:1.5B model via Ollama</p>
         <h3>2.3 Network Challenge &amp; Resolution</h3>
         <p>
             The model download from <code>registry.ollama.ai</code> initially timed out due to network restrictions in China.
@@ -236,6 +250,8 @@ ollama run qwen2:1.5b</code></pre></div>
         <p style="font-size:.88rem;color:var(--muted);">
             This was a real-world lesson in network infrastructure — understanding the difference between System Proxy mode (browsers only) and TUN mode (all traffic) was key to resolving the issue.
         </p>
+        <img class="screenshot" src="screenshots/ollama_chat.png" alt="Interacting with Qwen2:1.5B via Ollama terminal">
+        <p class="caption">Figure 2 — Interactive Q&amp;A session with the local Qwen2:1.5B model</p>
     </section>
 
     <section class="reveal">
@@ -261,6 +277,8 @@ ollama run qwen2:1.5b</code></pre></div>
             <li>JSON payload structure for the chat completions API</li>
             <li>Error handling patterns for HTTP errors vs. general exceptions</li>
         </ul>
+        <img class="screenshot" src="screenshots/claude_code.png" alt="Claude Code explaining call_llm function in VSCode">
+        <p class="caption">Figure 3 — Claude Code explaining the <code>call_llm</code> function in VSCode</p>
         <h3>3.3 Demonstration: Code Refactoring</h3>
         <p>Used Claude Code to redesign my blog website. The assistant:</p>
         <ul>
