@@ -23,6 +23,21 @@
     --num:      #c2612b;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+/* ── Back to top ── */
+#back-to-top {
+    position: fixed; bottom: 32px; right: 28px; z-index: 50;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--accent); font-size: 1.1rem; cursor: pointer;
+    opacity: 0; transform: translateY(16px); pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease, box-shadow .3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.05);
+    display: flex; align-items: center; justify-content: center; line-height: 1;
+}
+#back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+#back-to-top:hover { transform: translateY(-3px); box-shadow: 0 2px 8px rgba(0,0,0,.06), 0 16px 48px rgba(0,0,0,.08); border-color: var(--accent); }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
@@ -121,6 +136,7 @@ footer a:hover { color:var(--accent); }
     table.code-table td.code { padding-left:8px; }
     .mouse-glow { display: none; }
     #particles { opacity: .5; }
+    #back-to-top { bottom: 20px; right: 16px; width: 36px; height: 36px; font-size: 1rem; }
 }
 </style>
 </head>
@@ -129,6 +145,7 @@ footer a:hover { color:var(--accent); }
 <canvas id="particles"></canvas>
 <div class="mouse-glow" id="glow" aria-hidden="true"></div>
 <div class="progress-bar" id="progress"></div>
+<button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
 
 <div class="container">
 
@@ -362,10 +379,14 @@ footer a:hover { color:var(--accent); }
        ═══════════════════════════════════════════ */
     const progress = document.getElementById('progress');
     window.addEventListener('scroll', function() {
-        const st = window.scrollY;
-        const dh = document.documentElement.scrollHeight - window.innerHeight;
+        const st = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight;
         progress.style.width = dh > 0 ? (st / dh) * 100 + '%' : '0%';
     });
+
+    /* Back to Top */
+    const btt = document.getElementById('back-to-top');
+    window.addEventListener('scroll', function() { btt.classList.toggle('visible', window.scrollY > 400); });
+    btt.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 })();
 </script>
 

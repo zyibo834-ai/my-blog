@@ -18,6 +18,8 @@
             --code-bg:   #f3f0ea;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
             background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh;
@@ -27,36 +29,45 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
         }
 
-        /* ── Particle canvas ── */
-        #particles {
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-        }
+        #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-        /* ── Mouse glow ── */
         .mouse-glow {
             position: fixed; z-index: 0; pointer-events: none;
-            width: 500px; height: 500px;
-            border-radius: 50%;
+            width: 500px; height: 500px; border-radius: 50%;
             background: radial-gradient(circle, rgba(var(--accent-rgb), .06) 0%, rgba(var(--accent-rgb), .02) 40%, transparent 70%);
-            transform: translate(-50%, -50%);
-            transition: left .6s ease-out, top .6s ease-out;
-            will-change: left, top;
+            transform: translate(-50%, -50%); transition: left .6s ease-out, top .6s ease-out; will-change: left, top;
         }
 
-        /* ── Scroll progress bar ── */
         .progress-bar {
             position: fixed; top: 0; left: 0; height: 3px;
-            background: var(--accent);
-            z-index: 100;
-            transition: width .1s linear;
-            border-radius: 0 2px 2px 0;
+            background: var(--accent); z-index: 100;
+            transition: width .1s linear; border-radius: 0 2px 2px 0;
         }
+
+        #back-to-top {
+            position: fixed; bottom: 32px; right: 28px; z-index: 50;
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--accent); font-size: 1.1rem; cursor: pointer;
+            opacity: 0; transform: translateY(16px); pointer-events: none;
+            transition: opacity .35s ease, transform .35s ease, box-shadow .3s ease;
+            box-shadow: var(--shadow);
+            display: flex; align-items: center; justify-content: center; line-height: 1;
+        }
+        #back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+        #back-to-top:hover { transform: translateY(-3px); box-shadow: 0 2px 8px rgba(0,0,0,.06), 0 16px 48px rgba(0,0,0,.08); border-color: var(--accent); }
 
         .container { position: relative; z-index: 1; max-width: 720px; width: 100%; margin: 0 auto; padding: 0 24px; }
 
         nav { padding: 32px 0 0; }
-        nav a { font-size: .8rem; color: var(--muted); text-decoration: none; letter-spacing: .03em; transition: color .2s; }
-        nav a:hover { color: var(--accent); }
+        nav a {
+            font-size: .8rem; color: var(--muted); text-decoration: none;
+            letter-spacing: .03em;
+            background: linear-gradient(var(--accent),var(--accent)) left bottom / 0 1px no-repeat;
+            transition: color .2s, background-size .35s ease;
+            padding-bottom: 2px;
+        }
+        nav a:hover { color: var(--accent); background-size: 100% 1px; }
 
         .report-header { padding: 40px 0 44px; border-bottom: 1px solid var(--rule); margin-bottom: 48px; }
         .report-header .overline { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
@@ -69,21 +80,34 @@
         .meta-card {
             background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
             padding: 16px 22px; display: flex; flex-wrap: wrap; gap: 8px 32px;
-            font-size: .85rem; box-shadow: var(--shadow);
+            font-size: .85rem; box-shadow: var(--shadow); align-items: center;
         }
         .meta-card span { color: var(--muted); }
         .meta-card strong { font-weight: 600; color: var(--text); }
         .meta-card a { color: var(--accent); text-decoration: none; }
         .meta-card a:hover { text-decoration: underline; }
+        .meta-card .read-time { font-size: .78rem; color: var(--accent); margin-left: auto; font-weight: 500; }
 
-        /* ── Scroll reveal ── */
+        .code-block { position: relative; margin-bottom: 14px; }
+        .code-block pre { margin-bottom: 0; }
+        .code-block .copy-btn {
+            position: absolute; top: 8px; right: 10px;
+            font-size: .7rem; letter-spacing: .04em; text-transform: uppercase;
+            background: var(--surface); color: var(--muted);
+            border: 1px solid var(--border); border-radius: 4px;
+            padding: 3px 10px; cursor: pointer;
+            opacity: 0; transition: opacity .25s, color .2s;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        .code-block:hover .copy-btn { opacity: 1; }
+        .code-block .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .code-block .copy-btn.copied { color: #3d7a3d; border-color: #3d7a3d; }
+
         section.reveal {
             opacity: 0; transform: translateY(30px);
             transition: opacity .7s ease, transform .7s cubic-bezier(.25,.46,.45,.94);
         }
-        section.reveal.visible {
-            opacity: 1; transform: translateY(0);
-        }
+        section.reveal.visible { opacity: 1; transform: translateY(0); }
 
         section { margin-bottom: 48px; }
         section h2 {
@@ -101,7 +125,7 @@
 
         pre {
             background: var(--code-bg); border: 1px solid var(--border); border-radius: 5px;
-            padding: 14px 18px; font-size: .82rem; overflow-x: auto; margin-bottom: 14px; line-height: 1.6;
+            padding: 14px 18px; font-size: .82rem; overflow-x: auto; line-height: 1.6;
         }
         code { font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace; font-size: .88em; }
         pre code { font-size: .82rem; }
@@ -119,17 +143,24 @@
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
             font-size: .8rem; color: var(--muted);
         }
-        footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
-        footer a:hover { color: var(--accent); }
+        footer a {
+            color: var(--muted); text-decoration: none;
+            background: linear-gradient(var(--accent),var(--accent)) left bottom / 0 1px no-repeat;
+            transition: color .2s, background-size .35s ease;
+            padding-bottom: 2px;
+        }
+        footer a:hover { color: var(--accent); background-size: 100% 1px; }
 
         @media (max-width: 560px) {
             .report-header { padding: 28px 0 32px; margin-bottom: 32px; }
             .meta-card { flex-direction: column; gap: 4px; }
+            .meta-card .read-time { margin-left: 0; }
             section { margin-bottom: 36px; }
             th, td { padding: 8px 10px; font-size: .8rem; }
             footer { flex-direction: column; align-items: flex-start; }
             .mouse-glow { display: none; }
             #particles { opacity: .5; }
+            #back-to-top { bottom: 20px; right: 16px; width: 36px; height: 36px; font-size: 1rem; }
         }
     </style>
 </head>
@@ -138,6 +169,7 @@
 <canvas id="particles"></canvas>
 <div class="mouse-glow" id="glow" aria-hidden="true"></div>
 <div class="progress-bar" id="progress"></div>
+<button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
 
 <div class="container">
 
@@ -150,19 +182,17 @@
             <span><strong>Student:</strong>&nbsp;Zhan Yibo</span>
             <span><strong>ID:</strong>&nbsp;ZY2557213</span>
             <span><strong>Date:</strong>&nbsp;May 29, 2026</span>
+            <span class="read-time">⏱ ~5 min read</span>
         </div>
     </div>
 
-    <!-- Section 1: Online Agent -->
     <section class="reveal">
         <h2><span class="sec-num">01</span> Online Agent — File Analysis &amp; Web Search <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(5 pts)</span></h2>
-
         <h3>1.1 API Configuration</h3>
         <p>
             I obtained an API key for <strong>DeepSeek</strong> (deepseek-chat model), an OpenAI-compatible online LLM service.
             The API endpoint follows the standard <code>/v1/chat/completions</code> format, making it compatible with any OpenAI-style client.
         </p>
-
         <h3>1.2 Agent Implementation</h3>
         <p>
             I created a Python script (<a href="online_agent.py" style="color:var(--accent);">online_agent.py</a>) that supports two modes:
@@ -171,14 +201,12 @@
             <li><strong>File Analysis Mode:</strong> Reads a local file (Markdown, code, PDF, etc.) and sends its content to the LLM with a user-specified question.</li>
             <li><strong>Web Search Mode:</strong> Sends a question directly to the online LLM, which draws on its general knowledge to answer research questions.</li>
         </ul>
-
         <h3>1.3 Example Usage</h3>
-        <pre><code># Analyze a file
+        <div class="code-block"><pre><code># Analyze a file
 python online_agent.py --file report.md --question "What is this report about?"
 
 # General knowledge question
-python online_agent.py --question "Explain the difference between Git merge and rebase"</code></pre>
-
+python online_agent.py --question "Explain the difference between Git merge and rebase"</code></pre></div>
         <h3>1.4 Key Design Decisions</h3>
         <ul>
             <li>Used Python's built-in <code>urllib</code> to avoid external dependencies</li>
@@ -187,41 +215,31 @@ python online_agent.py --question "Explain the difference between Git merge and 
         </ul>
     </section>
 
-    <!-- Section 2: Local Model -->
     <section class="reveal">
         <h2><span class="sec-num">02</span> Local Model Deployment — Ollama <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(4 pts)</span></h2>
-
         <h3>2.1 Installation</h3>
         <p>
             I installed <strong>Ollama</strong> (version 0.24.0) on Windows 11 via the <code>winget</code> package manager:
         </p>
-        <pre><code>winget install Ollama.Ollama</code></pre>
+        <div class="code-block"><pre><code>winget install Ollama.Ollama</code></pre></div>
         <p>After installation, the Ollama service starts automatically in the background.</p>
-
         <h3>2.2 Model Deployment</h3>
-        <p>Attempted to pull <strong>Qwen2:1.5B</strong>, a lightweight open-source model:</p>
-        <pre><code>ollama pull qwen2:1.5b</code></pre>
-
-        <h3>2.3 Network Challenge</h3>
+        <p>Successfully pulled <strong>Qwen2:1.5B</strong>, a lightweight open-source model, after resolving network issues:</p>
+        <div class="code-block"><pre><code>ollama pull qwen2:1.5b
+ollama run qwen2:1.5b</code></pre></div>
+        <h3>2.3 Network Challenge &amp; Resolution</h3>
         <p>
-            The model download from <code>registry.ollama.ai</code> timed out due to network restrictions in China.
+            The model download from <code>registry.ollama.ai</code> initially timed out due to network restrictions in China.
             The registry domain resolved to an IPv6 address that was unreachable from the local network environment.
         </p>
-        <p><strong>Solution researched:</strong></p>
-        <ul>
-            <li>Route traffic through a VPN/proxy to an accessible network</li>
-            <li>Manually download the GGUF model file and import into Ollama</li>
-            <li>Use a Chinese mirror for Hugging Face models and create an Ollama Modelfile</li>
-        </ul>
+        <p><strong>Solution:</strong> Enabled VPN TUN mode (Clash), which routes all system traffic through the proxy — including CLI tools like Ollama. The download then completed successfully.</p>
         <p style="font-size:.88rem;color:var(--muted);">
-            This was documented as a real-world challenge — network accessibility is a practical concern in AI infrastructure deployment.
+            This was a real-world lesson in network infrastructure — understanding the difference between System Proxy mode (browsers only) and TUN mode (all traffic) was key to resolving the issue.
         </p>
     </section>
 
-    <!-- Section 3: IDE Integration -->
     <section class="reveal">
         <h2><span class="sec-num">03</span> IDE Integration — VSCode + Claude Code <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(3 pts)</span></h2>
-
         <h3>3.1 Setup</h3>
         <p>
             I integrated <strong>Claude Code</strong> (Anthropic's AI coding assistant) into <strong>Visual Studio Code</strong>
@@ -233,7 +251,6 @@ python online_agent.py --question "Explain the difference between Git merge and 
             <li>Real-time debugging assistance</li>
             <li>Multi-file editing capabilities</li>
         </ul>
-
         <h3>3.2 Demonstration: Code Explanation</h3>
         <p>
             Used Claude Code to explain the <code>call_llm</code> function in my online agent script. The AI broke down:
@@ -244,7 +261,6 @@ python online_agent.py --question "Explain the difference between Git merge and 
             <li>JSON payload structure for the chat completions API</li>
             <li>Error handling patterns for HTTP errors vs. general exceptions</li>
         </ul>
-
         <h3>3.3 Demonstration: Code Refactoring</h3>
         <p>Used Claude Code to redesign my blog website. The assistant:</p>
         <ul>
@@ -253,15 +269,12 @@ python online_agent.py --question "Explain the difference between Git merge and 
             <li>Improved typography with a serif/sans-serif pairing</li>
             <li>Added subtle visual effects (grain texture, hover transitions)</li>
         </ul>
-
         <h3>3.4 Development Workflow</h3>
         <p>Throughout this assignment, Claude Code acted as a code explainer, design assistant, documentation helper, and deployment assistant — managing the full development lifecycle from code to deployment.</p>
     </section>
 
-    <!-- Section 4: Documentation & Reflection -->
     <section class="reveal">
         <h2><span class="sec-num">04</span> Documentation &amp; Reflection <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(3 pts)</span></h2>
-
         <h3>4.1 Online vs Local Models — Comparison</h3>
         <table>
             <thead>
@@ -277,17 +290,13 @@ python online_agent.py --question "Explain the difference between Git merge and 
                 <tr><td><strong>Network Dependency</strong></td><td>Must access API endpoint</td><td>Must access model registry</td></tr>
             </tbody>
         </table>
-
         <h3>4.2 Challenges &amp; Solutions</h3>
         <p class="challenge"><strong>Challenge 1 — API Key Security:</strong> Initially hardcoded the API key in the script.<br>
         <strong>Solution:</strong> Refactored to use environment variables for secure credential management.</p>
-
-        <p class="challenge"><strong>Challenge 2 — Ollama Model Download:</strong> The official model registry was inaccessible due to network restrictions in China.<br>
-        <strong>Solution:</strong> Researched alternative import methods including manual GGUF downloads and Chinese mirrors.</p>
-
-        <p class="challenge"><strong>Challenge 3 — IDE Setup:</strong> Learning the capabilities and boundaries of AI-assisted coding tools.<br>
-        <strong>Solution:</strong> Started with simple tasks before moving to complex multi-file refactoring.</p>
-
+        <p class="challenge"><strong>Challenge 2 — Ollama Model Download:</strong> Official model registry was inaccessible due to China network restrictions.<br>
+        <strong>Solution:</strong> Switched VPN to TUN mode, routing all system traffic through the proxy — download completed successfully.</p>
+        <p class="challenge"><strong>Challenge 3 — Ollama Storage Migration:</strong> Default model storage was on C drive (limited SSD space).<br>
+        <strong>Solution:</strong> Set <code>OLLAMA_MODELS</code> environment variable to D drive, migrated 892MB of model files, freed C drive space.</p>
         <h3>4.3 Reflection</h3>
         <p>This assignment gave me practical experience with three tiers of AI agent deployment:</p>
         <ol>
@@ -307,109 +316,50 @@ python online_agent.py --question "Explain the difference between Git merge and 
 
 <script>
 (function() {
-    /* ═══════════════════════════════════════════
-       Particle Background
-       ═══════════════════════════════════════════ */
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     const particles = [];
-    const COUNT = 55;
-    const CONNECT = 120;
-    const RGB = [139, 105, 20];
-
+    const COUNT = 55, CONNECT = 120, RGB = [139, 105, 20];
     let w, h;
-    function resize() {
-        w = canvas.width  = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
+    function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
     class Particle {
         constructor() { this.reset(true); }
-        reset(init) {
-            this.x = init ? Math.random() * w : (Math.random() < .5 ? -10 : w + 10);
-            this.y = init ? Math.random() * h : (Math.random() < .5 ? -10 : h + 10);
-            this.vx = (Math.random() - .5) * .3;
-            this.vy = (Math.random() - .5) * .3;
-            this.r = Math.random() * 1.3 + .5;
-            this.alpha = Math.random() * .3 + .12;
-        }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) this.reset(false);
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${RGB.join(',')},${this.alpha})`;
-            ctx.fill();
-        }
+        reset(init) { this.x = init ? Math.random() * w : (Math.random() < .5 ? -10 : w + 10); this.y = init ? Math.random() * h : (Math.random() < .5 ? -10 : h + 10); this.vx = (Math.random() - .5) * .3; this.vy = (Math.random() - .5) * .3; this.r = Math.random() * 1.3 + .5; this.alpha = Math.random() * .3 + .12; }
+        update() { this.x += this.vx; this.y += this.vy; if (this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) this.reset(false); }
+        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fillStyle = 'rgba(' + RGB.join(',') + ',' + this.alpha + ')'; ctx.fill(); }
     }
-
     for (let i = 0; i < COUNT; i++) particles.push(new Particle());
-
-    function animate() {
-        ctx.clearRect(0, 0, w, h);
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
-            for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < CONNECT) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(${RGB.join(',')},${.04 * (1 - dist / CONNECT)})`;
-                    ctx.lineWidth = .5;
-                    ctx.stroke();
-                }
-            }
-        }
-        requestAnimationFrame(animate);
-    }
+    function animate() { ctx.clearRect(0, 0, w, h); for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); for (let j = i + 1; j < particles.length; j++) { var dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y, dist = Math.sqrt(dx * dx + dy * dy); if (dist < CONNECT) { ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.strokeStyle = 'rgba(' + RGB.join(',') + ',' + (0.04 * (1 - dist / CONNECT)) + ')'; ctx.lineWidth = 0.5; ctx.stroke(); } } } requestAnimationFrame(animate); }
     animate();
 
-    /* ═══════════════════════════════════════════
-       Mouse Glow
-       ═══════════════════════════════════════════ */
     const glow = document.getElementById('glow');
     let mx = -300, my = -300, cx = -300, cy = -300;
     document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
-    function follow() {
-        cx += (mx - cx) * .08;
-        cy += (my - cy) * .08;
-        glow.style.left = cx + 'px';
-        glow.style.top  = cy + 'px';
-        requestAnimationFrame(follow);
-    }
+    function follow() { cx += (mx - cx) * 0.08; cy += (my - cy) * 0.08; glow.style.left = cx + 'px'; glow.style.top = cy + 'px'; requestAnimationFrame(follow); }
     follow();
 
-    /* ═══════════════════════════════════════════
-       Scroll Progress Bar
-       ═══════════════════════════════════════════ */
     const progress = document.getElementById('progress');
-    window.addEventListener('scroll', function() {
-        const st = window.scrollY;
-        const dh = document.documentElement.scrollHeight - window.innerHeight;
-        progress.style.width = dh > 0 ? (st / dh) * 100 + '%' : '0%';
+    window.addEventListener('scroll', function() { var st = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight; progress.style.width = dh > 0 ? (st / dh) * 100 + '%' : '0%'; });
+
+    const btt = document.getElementById('back-to-top');
+    window.addEventListener('scroll', function() { btt.classList.toggle('visible', window.scrollY > 400); });
+    btt.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+    document.querySelectorAll('pre').forEach(function(pre) {
+        var wrapper = document.createElement('div'); wrapper.className = 'code-block';
+        pre.parentNode.insertBefore(wrapper, pre); wrapper.appendChild(pre);
+        var btn = document.createElement('button'); btn.className = 'copy-btn'; btn.textContent = 'Copy';
+        wrapper.appendChild(btn);
+        btn.addEventListener('click', function() {
+            navigator.clipboard.writeText(pre.textContent).then(function() {
+                btn.textContent = 'Copied!'; btn.classList.add('copied');
+                setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+            });
+        });
     });
 
-    /* ═══════════════════════════════════════════
-       Scroll Reveal
-       ═══════════════════════════════════════════ */
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: .1, rootMargin: '0px 0px -20px 0px' });
-
+    const observer = new IntersectionObserver(function(entries) { entries.forEach(function(entry) { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } }); }, { threshold: .1, rootMargin: '0px 0px -20px 0px' });
     document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
 })();
 </script>
