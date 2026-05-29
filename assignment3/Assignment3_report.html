@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 3 Report — Zhan Yibo</title>
+    <style>
+        :root {
+            --bg:        #fdfaf5;
+            --surface:   #ffffff;
+            --text:      #2d2a26;
+            --muted:     #6b6560;
+            --accent:    #8b6914;
+            --border:    #e6e0d8;
+            --rule:      #d4cdc2;
+            --shadow:    0 1px 3px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.05);
+            --code-bg:   #f3f0ea;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+        .container { position: relative; z-index: 1; max-width: 720px; width: 100%; margin: 0 auto; padding: 0 24px; }
+
+        nav { padding: 32px 0 0; }
+        nav a { font-size: .8rem; color: var(--muted); text-decoration: none; letter-spacing: .03em; transition: color .2s; }
+        nav a:hover { color: var(--accent); }
+
+        .report-header { padding: 40px 0 44px; border-bottom: 1px solid var(--rule); margin-bottom: 48px; }
+        .report-header .overline { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+        .report-header h1 {
+            font-family: Georgia, "Times New Roman", "Noto Serif", serif;
+            font-size: clamp(1.6rem, 4.5vw, 2.2rem); font-weight: 400; line-height: 1.25; letter-spacing: -.01em; margin-bottom: 24px;
+        }
+        .report-header h1 em { font-style: italic; color: var(--accent); }
+
+        .meta-card {
+            background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+            padding: 16px 22px; display: flex; flex-wrap: wrap; gap: 8px 32px;
+            font-size: .85rem; box-shadow: var(--shadow);
+        }
+        .meta-card span { color: var(--muted); }
+        .meta-card strong { font-weight: 600; color: var(--text); }
+        .meta-card a { color: var(--accent); text-decoration: none; }
+        .meta-card a:hover { text-decoration: underline; }
+
+        section { margin-bottom: 48px; }
+        section h2 {
+            font-family: Georgia, "Times New Roman", "Noto Serif", serif;
+            font-size: 1.15rem; font-weight: 400; color: var(--text); margin-bottom: 14px;
+            display: flex; align-items: baseline; gap: 10px;
+        }
+        section h2 .sec-num { font-size: .7rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--accent); font-weight: 600; letter-spacing: .08em; min-width: 22px; }
+        section h3 { font-size: .95rem; font-weight: 600; color: var(--text); margin: 18px 0 8px; }
+        section p  { color: var(--text); margin-bottom: 12px; font-size: .95rem; }
+        section ul, section ol { padding-left: 1.4em; font-size: .95rem; color: var(--text); }
+        section li { margin-bottom: 7px; }
+        section li strong { color: var(--text); }
+        section ul ul, section ol ul { margin-top: 6px; font-size: .92rem; color: var(--muted); }
+
+        pre {
+            background: var(--code-bg); border: 1px solid var(--border); border-radius: 5px;
+            padding: 14px 18px; font-size: .82rem; overflow-x: auto; margin-bottom: 14px; line-height: 1.6;
+        }
+        code { font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace; font-size: .88em; }
+        pre code { font-size: .82rem; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: .9rem; }
+        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 600; font-size: .8rem; letter-spacing: .05em; color: var(--muted); text-transform: uppercase; }
+        td { color: var(--text); }
+
+        .challenge { margin-bottom: 10px; }
+        .challenge strong { color: var(--accent); }
+
+        footer {
+            margin-top: 56px; padding: 32px 0 36px; border-top: 1px solid var(--rule);
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+            font-size: .8rem; color: var(--muted);
+        }
+        footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+        footer a:hover { color: var(--accent); }
+
+        @media (max-width: 560px) {
+            .report-header { padding: 28px 0 32px; margin-bottom: 32px; }
+            .meta-card { flex-direction: column; gap: 4px; }
+            section { margin-bottom: 36px; }
+            th, td { padding: 8px 10px; font-size: .8rem; }
+            footer { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <nav><a href="../index.html">&larr;&nbsp;Back to Home</a></nav>
+
+    <div class="report-header">
+        <p class="overline">Assignment 3 &middot; AI Agents Report</p>
+        <h1>Deployment and <em>Integration</em><br>of AI Agents</h1>
+        <div class="meta-card">
+            <span><strong>Student:</strong>&nbsp;Zhan Yibo</span>
+            <span><strong>ID:</strong>&nbsp;ZY2557213</span>
+            <span><strong>Date:</strong>&nbsp;May 29, 2026</span>
+        </div>
+    </div>
+
+    <!-- Section 1: Online Agent -->
+    <section>
+        <h2><span class="sec-num">01</span> Online Agent — File Analysis &amp; Web Search <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(5 pts)</span></h2>
+
+        <h3>1.1 API Configuration</h3>
+        <p>
+            I obtained an API key for <strong>DeepSeek</strong> (deepseek-chat model), an OpenAI-compatible online LLM service.
+            The API endpoint follows the standard <code>/v1/chat/completions</code> format, making it compatible with any OpenAI-style client.
+        </p>
+
+        <h3>1.2 Agent Implementation</h3>
+        <p>
+            I created a Python script (<a href="online_agent.py" style="color:var(--accent);">online_agent.py</a>) that supports two modes:
+        </p>
+        <ul>
+            <li><strong>File Analysis Mode:</strong> Reads a local file (Markdown, code, PDF, etc.) and sends its content to the LLM with a user-specified question.</li>
+            <li><strong>Web Search Mode:</strong> Sends a question directly to the online LLM, which draws on its general knowledge to answer research questions.</li>
+        </ul>
+
+        <h3>1.3 Example Usage</h3>
+        <pre><code># Analyze a file
+python online_agent.py --file report.md --question "What is this report about?"
+
+# General knowledge question
+python online_agent.py --question "Explain the difference between Git merge and rebase"</code></pre>
+
+        <h3>1.4 Key Design Decisions</h3>
+        <ul>
+            <li>Used Python's built-in <code>urllib</code> to avoid external dependencies</li>
+            <li>API key stored in environment variables for security and flexibility</li>
+            <li>Supports any OpenAI-compatible API by changing environment variables</li>
+        </ul>
+    </section>
+
+    <!-- Section 2: Local Model -->
+    <section>
+        <h2><span class="sec-num">02</span> Local Model Deployment — Ollama <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(4 pts)</span></h2>
+
+        <h3>2.1 Installation</h3>
+        <p>
+            I installed <strong>Ollama</strong> (version 0.24.0) on Windows 11 via the <code>winget</code> package manager:
+        </p>
+        <pre><code>winget install Ollama.Ollama</code></pre>
+        <p>After installation, the Ollama service starts automatically in the background.</p>
+
+        <h3>2.2 Model Deployment</h3>
+        <p>Attempted to pull <strong>Qwen2:1.5B</strong>, a lightweight open-source model:</p>
+        <pre><code>ollama pull qwen2:1.5b</code></pre>
+
+        <h3>2.3 Network Challenge</h3>
+        <p>
+            The model download from <code>registry.ollama.ai</code> timed out due to network restrictions in China.
+            The registry domain resolved to an IPv6 address that was unreachable from the local network environment.
+        </p>
+        <p><strong>Solution researched:</strong></p>
+        <ul>
+            <li>Route traffic through a VPN/proxy to an accessible network</li>
+            <li>Manually download the GGUF model file and import into Ollama</li>
+            <li>Use a Chinese mirror for Hugging Face models and create an Ollama Modelfile</li>
+        </ul>
+        <p style="font-size:.88rem;color:var(--muted);">
+            This was documented as a real-world challenge — network accessibility is a practical concern in AI infrastructure deployment.
+        </p>
+    </section>
+
+    <!-- Section 3: IDE Integration -->
+    <section>
+        <h2><span class="sec-num">03</span> IDE Integration — VSCode + Claude Code <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(3 pts)</span></h2>
+
+        <h3>3.1 Setup</h3>
+        <p>
+            I integrated <strong>Claude Code</strong> (Anthropic's AI coding assistant) into <strong>Visual Studio Code</strong>
+            via the official extension (<code>anthropic.claude-code</code>). Capabilities include:
+        </p>
+        <ul>
+            <li>Inline code explanations and refactoring suggestions</li>
+            <li>Natural language to code generation</li>
+            <li>Real-time debugging assistance</li>
+            <li>Multi-file editing capabilities</li>
+        </ul>
+
+        <h3>3.2 Demonstration: Code Explanation</h3>
+        <p>
+            Used Claude Code to explain the <code>call_llm</code> function in my online agent script. The AI broke down:
+        </p>
+        <ul>
+            <li>HTTP request construction with <code>urllib.request.Request</code></li>
+            <li>Authorization header format for Bearer token authentication</li>
+            <li>JSON payload structure for the chat completions API</li>
+            <li>Error handling patterns for HTTP errors vs. general exceptions</li>
+        </ul>
+
+        <h3>3.3 Demonstration: Code Refactoring</h3>
+        <p>Used Claude Code to redesign my blog website. The assistant:</p>
+        <ul>
+            <li>Restructured CSS with custom properties for maintainable theming</li>
+            <li>Added responsive design with CSS Grid and media queries</li>
+            <li>Improved typography with a serif/sans-serif pairing</li>
+            <li>Added subtle visual effects (grain texture, hover transitions)</li>
+        </ul>
+
+        <h3>3.4 Development Workflow</h3>
+        <p>Throughout this assignment, Claude Code acted as a code explainer, design assistant, documentation helper, and deployment assistant — managing the full development lifecycle from code to deployment.</p>
+    </section>
+
+    <!-- Section 4: Documentation & Reflection -->
+    <section>
+        <h2><span class="sec-num">04</span> Documentation &amp; Reflection <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(3 pts)</span></h2>
+
+        <h3>4.1 Online vs Local Models — Comparison</h3>
+        <table>
+            <thead>
+                <tr><th>Aspect</th><th>Online Model (DeepSeek)</th><th>Local Model (Ollama)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Response Speed</strong></td><td>Fast (~2–3s)</td><td>Hardware-dependent</td></tr>
+                <tr><td><strong>Accuracy</strong></td><td>High (large models)</td><td>Moderate (smaller models)</td></tr>
+                <tr><td><strong>Setup Difficulty</strong></td><td>Easy (API key only)</td><td>Medium (install + network)</td></tr>
+                <tr><td><strong>Internet Required</strong></td><td>Yes</td><td>Only for initial download</td></tr>
+                <tr><td><strong>Cost</strong></td><td>Pay-per-token</td><td>Free</td></tr>
+                <tr><td><strong>Privacy</strong></td><td>Data sent to cloud</td><td>Fully local</td></tr>
+                <tr><td><strong>Network Dependency</strong></td><td>Must access API endpoint</td><td>Must access model registry</td></tr>
+            </tbody>
+        </table>
+
+        <h3>4.2 Challenges &amp; Solutions</h3>
+        <p class="challenge"><strong>Challenge 1 — API Key Security:</strong> Initially hardcoded the API key in the script.<br>
+        <strong>Solution:</strong> Refactored to use environment variables for secure credential management.</p>
+
+        <p class="challenge"><strong>Challenge 2 — Ollama Model Download:</strong> The official model registry was inaccessible due to network restrictions in China.<br>
+        <strong>Solution:</strong> Researched alternative import methods including manual GGUF downloads and Chinese mirrors.</p>
+
+        <p class="challenge"><strong>Challenge 3 — IDE Setup:</strong> Learning the capabilities and boundaries of AI-assisted coding tools.<br>
+        <strong>Solution:</strong> Started with simple tasks before moving to complex multi-file refactoring.</p>
+
+        <h3>4.3 Reflection</h3>
+        <p>This assignment gave me practical experience with three tiers of AI agent deployment:</p>
+        <ol>
+            <li><strong>Online Agents (DeepSeek API):</strong> Most convenient for quick tasks. Best for complex reasoning and rapid prototyping.</li>
+            <li><strong>Local Models (Ollama):</strong> Full control and privacy. The setup process teaches infrastructure fundamentals. Best for sensitive data and offline work.</li>
+            <li><strong>IDE Integration (Claude Code):</strong> The most impactful for daily development. Having AI in the editor changes the development workflow fundamentally.</li>
+        </ol>
+        <p>The key takeaway: these three tiers are complementary. A well-rounded developer should know when to use each one based on task requirements, privacy constraints, and available infrastructure.</p>
+    </section>
+
+    <footer>
+        <span>Zhan Yibo &nbsp;&middot;&nbsp; ZY2557213</span>
+        <a href="https://deerflow.tech" target="_blank" title="Created By Deerflow">&#9670;&nbsp;Deerflow</a>
+    </footer>
+
+</div>
+</body>
+</html>
