@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title>Defend Your Thesis Icon</title>
+  <rect width="512" height="512" rx="60" fill="#11130f"/>
+  <path d="M98 122h222l66 66v230H98z" fill="#fffdf7" stroke="#11130f" stroke-width="0"/>
+  <path d="M320 122v74h74" fill="#e6e0d4"/>
+  <path d="M138 178h116v20H138zm0 58h218v20H138zm0 48h218v20H138zm0 48h154v20H138z" fill="#11130f"/>
+  <path d="M256 58l142 62v104c0 92-57 169-142 202-85-33-142-110-142-202V120z" fill="none" stroke="#c9f24d" stroke-width="28"/>
+  <path d="M224 278l44 42 86-112" fill="none" stroke="#ef4444" stroke-width="30" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

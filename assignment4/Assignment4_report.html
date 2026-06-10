@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Assignment 4 Report - Defend Your Thesis</title>
+    <style>
+      :root {
+        --bg: #f6f4ef;
+        --paper: #fffdf7;
+        --ink: #11130f;
+        --muted: #666257;
+        --line: #d8d1c5;
+        --accent: #ef4444;
+        --gold: #f5c542;
+        --cyan: #32c6c0;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          linear-gradient(90deg, rgba(17, 19, 15, 0.04) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(17, 19, 15, 0.04) 1px, transparent 1px),
+          var(--bg);
+        background-size: 28px 28px;
+        font-family: Georgia, "Times New Roman", serif;
+        line-height: 1.65;
+      }
+
+      main {
+        width: min(980px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 48px 0 72px;
+      }
+
+      header {
+        border-bottom: 3px solid var(--ink);
+        padding-bottom: 26px;
+        margin-bottom: 34px;
+      }
+
+      .kicker {
+        display: inline-block;
+        margin-bottom: 12px;
+        color: var(--accent);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.3rem, 8vw, 6rem);
+        line-height: 0.92;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 42px 0 14px;
+        font-size: clamp(1.5rem, 3vw, 2.4rem);
+        line-height: 1.05;
+        text-transform: uppercase;
+      }
+
+      h3 {
+        margin: 26px 0 10px;
+        font-size: 1.25rem;
+      }
+
+      p { margin: 0 0 14px; }
+
+      a {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .meta,
+      .card,
+      table,
+      figure {
+        border: 2px solid var(--ink);
+        background: var(--paper);
+        box-shadow: 6px 6px 0 var(--ink);
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0;
+        margin: 26px 0 30px;
+      }
+
+      .meta div {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .meta div:nth-child(odd) {
+        border-right: 1px solid var(--line);
+      }
+
+      .meta span {
+        display: block;
+        color: var(--muted);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .meta strong {
+        display: block;
+        margin-top: 3px;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        padding: 9px 14px;
+        border: 2px solid var(--ink);
+        background: var(--gold);
+        color: var(--ink);
+        box-shadow: 4px 4px 0 var(--ink);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.82rem;
+        font-weight: 900;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+
+      .button.secondary {
+        background: var(--paper);
+      }
+
+      .card {
+        padding: 20px;
+        margin: 18px 0;
+      }
+
+      ul {
+        margin: 0 0 18px 22px;
+        padding: 0;
+      }
+
+      li { margin-bottom: 8px; }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 18px 0;
+      }
+
+      th,
+      td {
+        padding: 11px 12px;
+        border: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: #f0eadf;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      code,
+      pre {
+        font-family: Consolas, "Courier New", monospace;
+      }
+
+      pre {
+        overflow: auto;
+        border: 2px solid var(--ink);
+        background: #11130f;
+        color: #fffdf7;
+        padding: 14px;
+      }
+
+      figure {
+        margin: 24px 0;
+        padding: 12px;
+      }
+
+      figure img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 1px solid var(--line);
+      }
+
+      figcaption {
+        margin-top: 9px;
+        color: var(--muted);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.76rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .tag {
+        display: inline-block;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        padding: 5px 8px;
+        border: 1px solid var(--ink);
+        background: var(--cyan);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.72rem;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 680px) {
+        .meta { grid-template-columns: 1fr; }
+        .meta div:nth-child(odd) { border-right: 0; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <span class="kicker">Assignment 4 Report</span>
+        <h1>Defend Your Thesis</h1>
+        <div class="actions">
+          <a class="button" href="index.html">Play Game</a>
+          <a class="button secondary" href="REPORT.md">Markdown Report</a>
+          <a class="button secondary" href="../index.html">Back to Blog</a>
+        </div>
+      </header>
+
+      <section class="meta">
+        <div><span>Project Option</span><strong>Option A: "Defend Your Thesis"</strong></div>
+        <div><span>Demo URL</span><strong><a href="https://zyibo834-ai.github.io/my-blog/assignment4/">GitHub Pages / assignment4</a></strong></div>
+        <div><span>Local Entry</span><strong>index.html</strong></div>
+        <div><span>Executable</span><strong>dist/DefendYourThesis_Windows.exe</strong></div>
+      </section>
+
+      <section>
+        <h2>1. Background & Design</h2>
+        <p>This project revives the in-class "Defend Your Thesis" idea as a stable, playable browser game. The player acts as a graduate student protecting a thesis document from academic threats: Bugs, Deadlines, and Peer Reviewers.</p>
+        <p>The core design goal is simple: protect the thesis for as long as possible while clearing threats and increasing the score. The game begins with a character selection screen, then moves into a real-time Canvas arena.</p>
+        <div class="card">
+          <span class="tag">Methodologist</span>
+          <span class="tag">Lab Guardian</span>
+          <span class="tag">Night Coder</span>
+          <p>Each defender has different movement speed, focus recovery, shot strength, and a special ability. This gives the game replay value while keeping the rules readable during presentation.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Tech Stack</h2>
+        <table>
+          <tr><th>Category</th><th>Choice</th></tr>
+          <tr><td>Development OS</td><td>Windows, PowerShell environment</td></tr>
+          <tr><td>Runtime Target</td><td>Chrome, Edge, Firefox, Safari, and mobile browsers</td></tr>
+          <tr><td>Languages</td><td>HTML, CSS, JavaScript</td></tr>
+          <tr><td>Rendering</td><td>HTML5 Canvas</td></tr>
+          <tr><td>App Type</td><td>Static website + PWA</td></tr>
+          <tr><td>AI Models/Tools</td><td>GPT-5/Codex as the primary LLM development partner</td></tr>
+        </table>
+        <p>The application does not require a backend server. It can be hosted as a static website, which satisfies the stable URL delivery requirement.</p>
+      </section>
+
+      <section>
+        <h2>3. Functional Requirements</h2>
+        <table>
+          <tr><th>Requirement</th><th>Implementation</th></tr>
+          <tr><td>Functional software</td><td>The game runs in a browser from index.html.</td></tr>
+          <tr><td>Character selection</td><td>Three playable defenders are implemented.</td></tr>
+          <tr><td>Score and game over</td><td>Score, wave, survival time, kills, high score, and game-over modal are implemented.</td></tr>
+          <tr><td>Keyboard/mouse controls</td><td>WASD/arrow movement, mouse/touch aiming, shooting, pause, restart, and special ability controls are implemented.</td></tr>
+          <tr><td>Stable URL or executable</td><td>The project is deployable at /my-blog/assignment4/ and also includes a Windows executable package.</td></tr>
+        </table>
+      </section>
+
+      <section>
+        <h2>4. Bonus Features</h2>
+        <h3>Integrated AI Agent</h3>
+        <p>The game includes an in-game Advisor panel. It gives tactical tips based on game state, such as low thesis integrity, low focus, deadline clusters, and reviewer clusters. It also answers typed questions about score, focus, thesis integrity, enemies, and character strategy.</p>
+        <h3>Cross-Platform Support</h3>
+        <p>The main version is a static web/PWA app. It runs on Windows, macOS, Linux, and mobile browsers. The Windows executable is included only as an additional local packaging option.</p>
+      </section>
+
+      <section>
+        <h2>5. Development Log</h2>
+        <h3>Architecture Planning With AI</h3>
+        <pre><code>Help me complete Assignment 4. Build a playable "Defend Your Thesis" game with character selection, score/game-over logic, controls, and documentation.</code></pre>
+        <ul>
+          <li>Use a static HTML/CSS/JavaScript architecture to avoid dependency and installation problems.</li>
+          <li>Use Canvas for fast 2D rendering and collision detection.</li>
+          <li>Add a service worker and manifest for PWA-style deployment.</li>
+        </ul>
+
+        <h3>Problem Solving With AI</h3>
+        <ul>
+          <li>Implemented the game loop, player movement, aiming, shooting, enemy waves, collision checks, and score logic.</li>
+          <li>Added a rule-based Advisor so the app can show AI-like assistance without relying on an external API key.</li>
+          <li>Generated real screenshots with headless Chrome for documentation.</li>
+        </ul>
+
+        <h3>Handling Hallucinations</h3>
+        <ul>
+          <li>Initial packaging ideas assumed tools like PyInstaller, Electron, or the .NET SDK were available. They were not, so the final primary delivery became a static website.</li>
+          <li>Headless browser screenshots initially failed because of sandboxed crash reporting. The issue was solved by using explicit browser profile folders and elevated execution.</li>
+          <li>The first screenshot showed an empty start state, so a demo URL mode was added to seed visible enemies and Advisor output for documentation only.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>6. Results</h2>
+        <figure>
+          <img src="screenshots/character-select.png" alt="Character selection screen">
+          <figcaption>Screenshot 1: Character selection</figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/gameplay.png" alt="Gameplay screen">
+          <figcaption>Screenshot 2: Gameplay with Advisor panel</figcaption>
+        </figure>
+      </section>
+
+      <section>
+        <h2>7. Deployment</h2>
+        <p>The project is placed inside the website repository as <code>assignment4/</code>. The expected public URL is:</p>
+        <pre><code>https://zyibo834-ai.github.io/my-blog/assignment4/</code></pre>
+        <p>No build command is required. GitHub Pages only needs to serve the static files.</p>
+      </section>
+
+      <section>
+        <h2>8. Conclusion</h2>
+        <p>This project demonstrates how LLMs can support software engineering beyond simple prompting. AI helped plan the architecture, generate implementation drafts, debug environment issues, improve UI layout, create screenshots, and document the development process. The final result is a stable, playable application that can be submitted as a website and as a Windows executable package.</p>
+      </section>
+    </main>
+  </body>
+</html>
