@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment 3 Report — Zhan Yibo</title>
+    <title>Assignment 3 Report - Zhan Yibo</title>
     <style>
         :root {
             --bg:        #fdfaf5;
@@ -199,7 +199,7 @@
     </div>
 
     <section class="reveal">
-        <h2><span class="sec-num">01</span> Online Agent — File Analysis &amp; Web Search <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(5 pts)</span></h2>
+        <h2><span class="sec-num">01</span> Online Agent - File Analysis &amp; General Q&amp;A <span style="font-size:.75rem;color:var(--accent);font-weight:600;">(5 pts)</span></h2>
         <h3>1.1 API Configuration</h3>
         <p>
             I obtained an API key for <strong>DeepSeek</strong> (deepseek-chat model), an OpenAI-compatible online LLM service.
@@ -210,8 +210,8 @@
             I created a Python script (<a href="online_agent.py" style="color:var(--accent);">online_agent.py</a>) that supports two modes:
         </p>
         <ul>
-            <li><strong>File Analysis Mode:</strong> Reads a local file (Markdown, code, PDF, etc.) and sends its content to the LLM with a user-specified question.</li>
-            <li><strong>Web Search Mode:</strong> Sends a question directly to the online LLM, which draws on its general knowledge to answer research questions.</li>
+            <li><strong>File Analysis Mode:</strong> Reads a local text-based file (Markdown, code, .txt, etc.) and sends its content to the LLM with a user-specified question. This is the main completed requirement for the online agent.</li>
+            <li><strong>General Question Answering Mode:</strong> Sends a question directly to the online LLM, which answers using its general knowledge. This is an auxiliary function, not a real live web search engine.</li>
         </ul>
         <h3>1.3 Example Usage</h3>
         <div class="code-block"><pre><code># Analyze a file
@@ -240,7 +240,7 @@ python online_agent.py --question "Explain the difference between Git merge and 
         <div class="code-block"><pre><code>ollama pull qwen2:1.5b
 ollama run qwen2:1.5b</code></pre></div>
         <img class="screenshot" src="screenshots/ollama_pull.png" alt="Ollama pull qwen2:1.5b successful download">
-        <p class="caption">Figure 1 — Downloading Qwen2:1.5B model via Ollama</p>
+        <p class="caption">Figure 1 - Downloading Qwen2:1.5B model via Ollama</p>
         <h3>2.3 Network Challenge &amp; Resolution</h3>
         <p>
             The model download from <code>registry.ollama.ai</code> initially timed out due to network restrictions in China.
@@ -251,7 +251,7 @@ ollama run qwen2:1.5b</code></pre></div>
             This was a real-world lesson in network infrastructure — understanding the difference between System Proxy mode (browsers only) and TUN mode (all traffic) was key to resolving the issue.
         </p>
         <img class="screenshot" src="screenshots/ollama_chat.png" alt="Interacting with Qwen2:1.5B via Ollama terminal">
-        <p class="caption">Figure 2 — Interactive Q&amp;A session with the local Qwen2:1.5B model</p>
+        <p class="caption">Figure 2 - Interactive Q&amp;A session with the local Qwen2:1.5B model</p>
     </section>
 
     <section class="reveal">
@@ -278,7 +278,7 @@ ollama run qwen2:1.5b</code></pre></div>
             <li>Error handling patterns for HTTP errors vs. general exceptions</li>
         </ul>
         <img class="screenshot" src="screenshots/claude_code.png" alt="Claude Code explaining call_llm function in VSCode">
-        <p class="caption">Figure 3 — Claude Code explaining the <code>call_llm</code> function in VSCode</p>
+        <p class="caption">Figure 3 - Claude Code explaining the <code>call_llm</code> function in VSCode</p>
         <h3>3.3 Demonstration: Code Refactoring</h3>
         <p>Used Claude Code to redesign my blog website. The assistant:</p>
         <ul>

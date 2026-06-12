@@ -6,7 +6,7 @@
 
 ---
 
-## 1. Online Agent — File Analysis & Web Search (5 pts)
+## 1. Online Agent - File Analysis & General Q&A (5 pts)
 
 ### 1.1 API Configuration
 
@@ -14,11 +14,11 @@ I obtained an API key for **DeepSeek** (deepseek-chat model), an OpenAI-compatib
 
 ### 1.2 Agent Implementation
 
-I created a Python script ([`online_agent.py`](assignment3/online_agent.py)) that supports two modes:
+I created a Python script ([`online_agent.py`](online_agent.py)) that supports two modes:
 
-**File Analysis Mode:** Reads a local file (Markdown, code, PDF, etc.) and sends its content to the LLM with a user-specified question.
+**File Analysis Mode:** Reads a local text-based file (Markdown, code, `.txt`, etc.) and sends its content to the LLM with a user-specified question. This is the main completed requirement for the online agent.
 
-**Web Search Mode:** Sends a question directly to the online LLM, which draws on its general knowledge to answer research questions.
+**General Question Answering Mode:** Sends a question directly to the online LLM, which answers using its general knowledge. This is an auxiliary function, not a real live web search engine.
 
 ### 1.3 Example Usage
 
@@ -32,13 +32,13 @@ python online_agent.py --question "Explain the difference between Git merge and 
 
 ### 1.4 Key Design Decisions
 
-- Used Python's built-in `urllib` to avoid external dependencies — the script runs on any Python 3 installation
+- Used Python's built-in `urllib` to avoid external dependencies - the script runs on any Python 3 installation
 - API key stored in environment variables (`LLM_API_KEY`, `LLM_API_URL`, `LLM_MODEL`) for security and flexibility
 - Supports any OpenAI-compatible API (DeepSeek, Qwen, OpenAI) by changing environment variables
 
 ---
 
-## 2. Local Model Deployment — Ollama (4 pts)
+## 2. Local Model Deployment - Ollama (4 pts)
 
 ### 2.1 Installation
 
@@ -52,26 +52,29 @@ After installation, the Ollama service starts automatically in the background an
 
 ### 2.2 Model Deployment
 
-Attempted to pull **Qwen2:1.5B**, a lightweight open-source model suitable for local experimentation:
+I successfully pulled **Qwen2:1.5B**, a lightweight open-source model suitable for local experimentation:
 
 ```bash
 ollama pull qwen2:1.5b
 ```
 
+After the model was downloaded, I ran it in the terminal:
+
+```bash
+ollama run qwen2:1.5b
+```
+
 ### 2.3 Network Challenge
 
-The model download from `registry.ollama.ai` timed out due to network restrictions in China. The registry domain resolved to an IPv6 address that was unreachable from the local network environment.
+The model download from `registry.ollama.ai` initially timed out due to network restrictions in China. The registry domain resolved to an IPv6 address that was unreachable from the local network environment.
 
-**Solution:** After researching the issue, I found that Ollama models can be downloaded through alternative methods:
-1. Use a VPN/proxy to route traffic through an accessible network
-2. Manually download the GGUF model file and import it into Ollama
-3. Use a Chinese mirror for Hugging Face models and create an Ollama Modelfile
+**Solution:** I enabled VPN TUN mode so that command-line traffic from Ollama was routed through the proxy. After this change, `ollama pull qwen2:1.5b` completed successfully, and I could interact with the model using `ollama run qwen2:1.5b`.
 
-I documented this as a real-world challenge in deploying AI infrastructure — network accessibility is a practical concern that affects toolchain setup.
+The screenshots in the HTML report demonstrate the successful model download and terminal interaction. I documented this as a real-world challenge in deploying AI infrastructure - network accessibility is a practical concern that affects toolchain setup.
 
 ---
 
-## 3. IDE Integration — VSCode + Claude Code (3 pts)
+## 3. IDE Integration - VSCode + Claude Code (3 pts)
 
 ### 3.1 Setup
 
@@ -103,16 +106,16 @@ This demonstrated how IDE-integrated AI can assist with both backend (Python) an
 ### 3.4 Development Workflow
 
 Throughout this assignment, Claude Code acted as:
-- **Code explainer** — breaking down unfamiliar API patterns
-- **Design assistant** — producing polished UI from natural language descriptions
-- **Documentation helper** — formatting reports and suggesting structural improvements
-- **Deployment assistant** — managing git commits and pushing to GitHub Pages
+- **Code explainer** - breaking down unfamiliar API patterns
+- **Design assistant** - producing polished UI from natural language descriptions
+- **Documentation helper** - formatting reports and suggesting structural improvements
+- **Deployment assistant** - managing git commits and pushing to GitHub Pages
 
 ---
 
 ## 4. Documentation & Reflection (3 pts)
 
-### 4.1 Online vs Local Models — Comparison
+### 4.1 Online vs Local Models - Comparison
 
 | Aspect | Online Model (DeepSeek) | Local Model (Ollama) |
 |--------|------------------------|----------------------|
@@ -126,13 +129,13 @@ Throughout this assignment, Claude Code acted as:
 
 ### 4.2 Challenges & Solutions
 
-**Challenge 1 — API Key Security:** Initially hardcoded the API key in the script.
+**Challenge 1 - API Key Security:** Initially hardcoded the API key in the script.
 **Solution:** Refactored to use environment variables for secure credential management.
 
-**Challenge 2 — Ollama Model Download:** The official Ollama model registry was inaccessible due to network restrictions in China.
-**Solution:** Researched alternative model import methods including manual GGUF downloads and Chinese mirrors.
+**Challenge 2 - Ollama Model Download:** The official Ollama model registry initially timed out due to network restrictions in China.
+**Solution:** Enabled VPN TUN mode so the Ollama CLI traffic could reach the model registry. After that, Qwen2:1.5B downloaded and ran successfully.
 
-**Challenge 3 — IDE Setup:** Learning the capabilities and boundaries of AI-assisted coding tools.
+**Challenge 3 - IDE Setup:** Learning the capabilities and boundaries of AI-assisted coding tools.
 **Solution:** Started with simple tasks (code explanation) before moving to complex ones (multi-file refactoring).
 
 ### 4.3 Reflection
@@ -143,6 +146,6 @@ This assignment gave me practical experience with three tiers of AI agent deploy
 
 2. **Local Models (Ollama):** Full control and privacy. The setup process teaches infrastructure fundamentals. Best for: sensitive data, offline work, learning how LLMs work under the hood.
 
-3. **IDE Integration (Claude Code):** The most impactful for daily development. Having AI directly in the editor changes how I approach coding — from "write first, debug later" to "design with AI, then implement."
+3. **IDE Integration (Claude Code):** The most impactful for daily development. Having AI directly in the editor changes how I approach coding - from "write first, debug later" to "design with AI, then implement."
 
 The key takeaway is that these three tiers are complementary, not competitive. A well-rounded developer should know when to use each one based on the task requirements, privacy constraints, and available infrastructure.

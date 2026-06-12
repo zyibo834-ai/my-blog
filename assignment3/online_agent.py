@@ -1,13 +1,13 @@
 """
-Assignment 3 — Online Agent: File Analysis & Web Search
+Assignment 3 - Online Agent: File Analysis & General Q&A
 Uses an OpenAI-compatible API (DeepSeek / Qwen / OpenAI) to:
-  1. Analyze a local file (Markdown, PDF, code, etc.)
+  1. Analyze a local text-based file (Markdown, code, txt, etc.)
   2. Answer questions about its contents
 
 Usage:
   python online_agent.py --file report.md
   python online_agent.py --file report.md --question "Summarize the key findings"
-  python online_agent.py --question "What is Python?"  (web-search mode without file)
+  python online_agent.py --question "What is Python?"  (general Q&A mode without file)
 """
 
 import os
@@ -72,8 +72,8 @@ def analyze_file(file_path: str, user_question: str | None) -> str:
     return call_llm(messages)
 
 
-def web_search_agent(question: str) -> str:
-    """Ask the LLM a question that may require general knowledge (simulates web search via LLM)."""
+def general_qa_agent(question: str) -> str:
+    """Ask the online LLM a general question without reading a file."""
     messages = [
         {"role": "system", "content": (
             "You are a helpful research assistant with access to general knowledge up to 2024. "
@@ -87,7 +87,7 @@ def web_search_agent(question: str) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Online LLM Agent — File Analysis & Web Search")
+    parser = argparse.ArgumentParser(description="Online LLM Agent - File Analysis & General Q&A")
     parser.add_argument("--file", "-f", help="Path to a file to analyze")
     parser.add_argument("--question", "-q", help="Question to ask about the file or general knowledge")
     args = parser.parse_args()
@@ -106,7 +106,7 @@ def main():
         result = analyze_file(args.file, args.question)
     else:
         print(f"Question: {args.question}")
-        result = web_search_agent(args.question)
+        result = general_qa_agent(args.question)
 
     print("-" * 50)
     print(result)
