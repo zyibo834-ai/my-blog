@@ -1,7 +1,8 @@
 # Assignment 4 Report: Defend Your Thesis
 
-**Student:** TODO: fill in name  
-**Course:** TODO: fill in course name  
+**Student:** Zhan Yibo  
+**Student ID:** ZY2557213  
+**Course:** Fundamentals of Software Technology  
 **Project Option:** Option A, "Defend Your Thesis"  
 **Demo URL:** https://zyibo834-ai.github.io/my-blog/assignment4/  
 **Final Website Version:** English browser game hosted inside my existing GitHub Pages site  
