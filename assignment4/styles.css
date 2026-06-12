@@ -87,8 +87,7 @@ button {
 .assistant-form input,
 .assistant-form button,
 .ability-dock small,
-.result-grid span,
-.deerflow-mark {
+.result-grid span {
   font-family: "Microsoft YaHei", "Noto Sans SC", "Cascadia Mono", Consolas, monospace;
 }
 
@@ -902,26 +901,6 @@ body.is-game-active .brand-kicker {
 
 .result-grid strong {
   font-size: 1.55rem;
-}
-
-.deerflow-mark {
-  position: fixed;
-  right: 12px;
-  bottom: 10px;
-  z-index: 30;
-  color: rgba(246, 244, 239, 0.72);
-  background: rgba(17, 19, 15, 0.78);
-  border: 1px solid rgba(246, 244, 239, 0.28);
-  padding: 6px 8px;
-  font-size: 0.64rem;
-  text-decoration: none;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
-}
-
-.deerflow-mark:hover,
-.deerflow-mark:focus-visible {
-  color: var(--acid);
 }
 
 .sr-only {

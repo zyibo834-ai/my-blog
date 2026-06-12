@@ -9,7 +9,7 @@
       * { box-sizing: border-box; }
       body { margin:0; color:var(--ink); background:linear-gradient(90deg, rgba(17,19,15,.04) 1px, transparent 1px), linear-gradient(0deg, rgba(17,19,15,.04) 1px, transparent 1px), var(--bg); background-size:28px 28px; font-family: Georgia, "Times New Roman", serif; line-height:1.65; }
       main { width:min(980px, calc(100% - 32px)); margin:0 auto; padding:48px 0 72px; }
-      article { background:rgba(255,253,247,.88); border:2px solid var(--ink); box-shadow:12px 12px 0 rgba(17,19,15,.12); padding:clamp(22px, 4vw, 44px); }
+      article { background:rgba(255,253,247,.88); border:2px solid var(--ink); box-shadow:12px 12px 0 rgba(17,19,15,.12); padding:clamp(22px, 4vw, 44px); overflow-x:auto; }
       h1 { margin:0 0 20px; font-size:clamp(2.4rem, 7vw, 5.5rem); line-height:.92; text-transform:uppercase; }
       h2 { margin:40px 0 12px; border-top:3px solid var(--ink); padding-top:18px; font-size:clamp(1.45rem, 3vw, 2.2rem); line-height:1.08; text-transform:uppercase; }
       h3 { margin:26px 0 10px; font-size:1.2rem; }
@@ -20,9 +20,12 @@
       code { font-family:Consolas, "Courier New", monospace; background:#efe8dc; border:1px solid var(--line); padding:.08rem .28rem; }
       pre { overflow:auto; background:#11130f; color:#f6f4ef; padding:16px; border-radius:6px; }
       pre code { background:transparent; border:0; padding:0; color:inherit; }
-      table { width:100%; border-collapse:collapse; margin:14px 0 22px; background:#fffdf7; }
-      th, td { border:1px solid var(--line); padding:10px 12px; vertical-align:top; }
-      th { background:#efe8dc; text-align:left; }
+      table { width:100%; min-width:680px; border-collapse:separate; border-spacing:0; margin:18px 0 26px; background:#fffdf7; border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:0 8px 22px rgba(17,19,15,.06); }
+      th, td { border-bottom:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
+      th { background:#11130f; color:#fffdf7; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; }
+      td:first-child { width:28%; font-weight:800; color:var(--ink); background:#f5efe3; }
+      tr:nth-child(even) td:not(:first-child) { background:#fbf7ee; }
+      tr:last-child td { border-bottom:0; }
       img { max-width:100%; border:2px solid var(--ink); display:block; margin:10px 0 20px; }
       strong { font-weight:800; }
     </style>
