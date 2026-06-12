@@ -60,7 +60,7 @@ more interesting because the player is rewarded for hunting special colored thre
 ## 3. Tech Stack
 
 | Category | Choice |
-|---|---|
+| :--- | :--- |
 | Hardware | Standard Windows laptop/desktop |
 | Development OS | Windows with PowerShell |
 | Runtime Target | Modern web browser: Chrome, Edge, Firefox, Safari |
@@ -78,7 +78,7 @@ served over HTTP/HTTPS.
 ## 4. Functional Requirements
 
 | Requirement | Implementation |
-|---|---|
+| :--- | :--- |
 | Functional software | The game runs from the GitHub Pages URL and from local `index.html`. |
 | Character selection | Three playable defenders with different strengths, movement, abilities, and play styles. |
 | Game over and score logic | Score, kills, wave, timer, thesis integrity, victory/defeat state, high score, and game-over modal are implemented. |

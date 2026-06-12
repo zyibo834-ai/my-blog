@@ -22,10 +22,10 @@
       pre code { background:transparent; border:0; padding:0; color:inherit; }
       table { width:100%; min-width:680px; border-collapse:separate; border-spacing:0; margin:18px 0 26px; background:#fffdf7; border:1px solid var(--line); border-radius:8px; overflow:hidden; box-shadow:0 8px 22px rgba(17,19,15,.06); }
       th, td { border-bottom:1px solid var(--line); padding:12px 14px; vertical-align:top; text-align:left; }
-      th { background:#11130f; color:#fffdf7; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; }
-      td:first-child { width:28%; font-weight:800; color:var(--ink); background:#f5efe3; }
-      tr:nth-child(even) td:not(:first-child) { background:#fbf7ee; }
-      tr:last-child td { border-bottom:0; }
+      thead th { background:#11130f; color:#fffdf7; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; }
+      tbody th { width:28%; font-weight:800; color:var(--ink); background:#f5efe3; }
+      tr:nth-child(even) td { background:#fbf7ee; }
+      tr:last-child th, tr:last-child td { border-bottom:0; }
       img { max-width:100%; border:2px solid var(--ink); display:block; margin:10px 0 20px; }
       strong { font-weight:800; }
     </style>
@@ -59,26 +59,36 @@
 </ul>
 <p>The enemies include regular bugs, fast deadlines, tougher peer reviewers, committee mini-boss pressure, and the final boss. Some monsters have colored auras. Defeating these monsters gives temporary boosts, such as Machine Gun fire rate, Area Blast damage, Scatter shots, Shield protection, and Freeze control. This system makes target priority more interesting because the player is rewarded for hunting special colored threats.</p>
 <h2>3. Tech Stack</h2>
-<table><thead><tr><th>Category</th><th>Choice</th></tr></thead><tbody>
-<tr><td>Hardware</td><td>Standard Windows laptop/desktop</td></tr>
-<tr><td>Development OS</td><td>Windows with PowerShell</td></tr>
-<tr><td>Runtime Target</td><td>Modern web browser: Chrome, Edge, Firefox, Safari</td></tr>
-<tr><td>Languages</td><td>HTML, CSS, JavaScript</td></tr>
-<tr><td>Rendering</td><td>HTML5 Canvas</td></tr>
-<tr><td>App Type</td><td>Static website and PWA-style browser app</td></tr>
-<tr><td>Hosting</td><td>GitHub Pages</td></tr>
-<tr><td>AI Models/Tools</td><td>GPT-5/Codex as the primary LLM development partner</td></tr>
-</tbody></table>
+<table>
+<thead>
+<tr><th scope="col">Category</th><th scope="col">Choice</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">Hardware</th><td>Standard Windows laptop/desktop</td></tr>
+<tr><th scope="row">Development OS</th><td>Windows with PowerShell</td></tr>
+<tr><th scope="row">Runtime Target</th><td>Modern web browser: Chrome, Edge, Firefox, Safari</td></tr>
+<tr><th scope="row">Languages</th><td>HTML, CSS, JavaScript</td></tr>
+<tr><th scope="row">Rendering</th><td>HTML5 Canvas</td></tr>
+<tr><th scope="row">App Type</th><td>Static website and PWA-style browser app</td></tr>
+<tr><th scope="row">Hosting</th><td>GitHub Pages</td></tr>
+<tr><th scope="row">AI Models/Tools</th><td>GPT-5/Codex as the primary LLM development partner</td></tr>
+</tbody>
+</table>
 <p>The application does not require a backend server. It is hosted as a static website, which satisfies the assignment requirement for a stable URL. The game also includes <code>manifest.webmanifest</code> and <code>sw.js</code>, so it can behave like an installable web app when served over HTTP/HTTPS.</p>
 <h2>4. Functional Requirements</h2>
-<table><thead><tr><th>Requirement</th><th>Implementation</th></tr></thead><tbody>
-<tr><td>Functional software</td><td>The game runs from the GitHub Pages URL and from local <code>index.html</code>.</td></tr>
-<tr><td>Character selection</td><td>Three playable defenders with different strengths, movement, abilities, and play styles.</td></tr>
-<tr><td>Game over and score logic</td><td>Score, kills, wave, timer, thesis integrity, victory/defeat state, high score, and game-over modal are implemented.</td></tr>
-<tr><td>Keyboard and mouse controls</td><td>WASD/arrow movement, mouse/touch aiming, shooting, pause, restart, and special ability controls are implemented.</td></tr>
-<tr><td>Stable URL</td><td>The game is hosted at <code>https://zyibo834-ai.github.io/my-blog/assignment4/</code>.</td></tr>
-<tr><td>AI-assisted documentation</td><td>This report explains architecture, implementation, debugging, and how AI suggestions were verified.</td></tr>
-</tbody></table>
+<table>
+<thead>
+<tr><th scope="col">Requirement</th><th scope="col">Implementation</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">Functional software</th><td>The game runs from the GitHub Pages URL and from local <code>index.html</code>.</td></tr>
+<tr><th scope="row">Character selection</th><td>Three playable defenders with different strengths, movement, abilities, and play styles.</td></tr>
+<tr><th scope="row">Game over and score logic</th><td>Score, kills, wave, timer, thesis integrity, victory/defeat state, high score, and game-over modal are implemented.</td></tr>
+<tr><th scope="row">Keyboard and mouse controls</th><td>WASD/arrow movement, mouse/touch aiming, shooting, pause, restart, and special ability controls are implemented.</td></tr>
+<tr><th scope="row">Stable URL</th><td>The game is hosted at <code>https://zyibo834-ai.github.io/my-blog/assignment4/</code>.</td></tr>
+<tr><th scope="row">AI-assisted documentation</th><td>This report explains architecture, implementation, debugging, and how AI suggestions were verified.</td></tr>
+</tbody>
+</table>
 <h2>5. Bonus Features</h2>
 <h3>Integrated AI Agent (+3)</h3>
 <p>The game includes an in-game <strong>Defense Advisor</strong> panel. It gives short tactical messages based on the current game state, such as low thesis integrity, low Focus, deadline clusters, boss phases, or dangerous reviewer pressure.</p>
