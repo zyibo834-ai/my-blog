@@ -3,477 +3,548 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zhan Yibo &mdash; Personal Blog</title>
+    <title>Zhan Yibo - Software Coursework Portfolio</title>
     <style>
         :root {
-            --bg:        #fdfaf5;
-            --surface:   #ffffff;
-            --text:      #2d2a26;
-            --muted:     #6b6560;
-            --accent:    #8b6914;
-            --accent-rgb: 139, 105, 20;
-            --border:    #e6e0d8;
-            --rule:      #d4cdc2;
-            --shadow:    0 1px 3px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.05);
-            --shadow-lg: 0 2px 8px rgba(0,0,0,.06), 0 16px 48px rgba(0,0,0,.08);
+            --bg: #081426;
+            --bg-soft: #0e213c;
+            --surface: #ffffff;
+            --surface-soft: #f4f7fb;
+            --text: #102033;
+            --muted: #5d6b7c;
+            --line: #dbe4ef;
+            --blue: #2f6df6;
+            --cyan: #18b6c8;
+            --violet: #7c5cff;
+            --gold: #f6c94c;
+            --shadow: 0 18px 48px rgba(1, 11, 28, 0.22);
+            --shadow-soft: 0 10px 28px rgba(1, 11, 28, 0.12);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.65;
+            margin: 0;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            cursor: default;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 14% 8%, rgba(47, 109, 246, 0.24), transparent 30%),
+                radial-gradient(circle at 86% 12%, rgba(124, 92, 255, 0.2), transparent 28%),
+                linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 46%, #eef4fb 46%, #f7f9fd 100%);
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
         }
 
-        /* ── Grain texture overlay ── */
         body::before {
             content: "";
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-            opacity: .025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.18;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, #000 0%, transparent 56%);
         }
 
-        /* ── Particle canvas ── */
-        #particles {
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        a {
+            color: inherit;
         }
 
-        /* ── Mouse glow ── */
-        .mouse-glow {
-            position: fixed; z-index: 0; pointer-events: none;
-            width: 500px; height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(var(--accent-rgb), .06) 0%, rgba(var(--accent-rgb), .02) 40%, transparent 70%);
-            transform: translate(-50%, -50%);
-            transition: left .6s ease-out, top .6s ease-out;
-            will-change: left, top;
+        .page {
+            position: relative;
+            z-index: 1;
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
         }
 
-        /* ── Back to top ── */
-        #back-to-top {
-            position: fixed; bottom: 32px; right: 28px; z-index: 50;
-            width: 40px; height: 40px; border-radius: 50%;
-            background: var(--surface); border: 1px solid var(--border);
-            color: var(--accent); font-size: 1.1rem; cursor: pointer;
-            opacity: 0; transform: translateY(16px); pointer-events: none;
-            transition: opacity .35s ease, transform .35s ease, box-shadow .3s ease;
-            box-shadow: var(--shadow);
-            display: flex; align-items: center; justify-content: center;
-            line-height: 1;
-        }
-        #back-to-top.visible {
-            opacity: 1; transform: translateY(0);
-            pointer-events: auto;
-        }
-        #back-to-top:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent);
+        .hero {
+            min-height: 62vh;
+            display: grid;
+            align-items: end;
+            padding: 70px 0 54px;
+            color: #fff;
         }
 
-        .container {
-            position: relative; z-index: 1;
-            max-width: 720px; width: 100%; margin: 0 auto; padding: 0 24px;
+        .hero-kicker {
+            display: inline-flex;
+            width: fit-content;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 18px;
+            padding: 7px 12px;
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            color: #dbeafe;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
         }
 
-        /* ── Header ── */
-        header {
-            padding: 72px 0 48px;
-            border-bottom: 1px solid var(--rule);
-            margin-bottom: 56px;
-        }
-        header .overline {
-            font-size: .75rem; letter-spacing: .18em; text-transform: uppercase;
-            color: var(--accent); margin-bottom: 12px; font-weight: 600;
-        }
-        header h1 {
-            font-family: Georgia, "Times New Roman", "Noto Serif", serif;
-            font-size: clamp(1.8rem, 5vw, 2.6rem);
-            font-weight: 400; color: var(--text); line-height: 1.25; letter-spacing: -.01em;
-            min-height: 1.25em;
-        }
-        header h1 em { font-style: italic; color: var(--accent); }
-        header h1 .cursor {
-            display: inline-block; width: 2px; height: 1.1em;
-            background: var(--accent); vertical-align: text-bottom; margin-left: 1px;
-            animation: blink .8s steps(1) infinite;
-        }
-        header h1 .cursor.done { animation: none; opacity: 0; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        header .subtitle { color: var(--muted); font-size: .95rem; margin-top: 10px; }
-
-        /* ── Section title ── */
-        .section-label {
-            font-size: .7rem; letter-spacing: .16em; text-transform: uppercase;
-            color: var(--accent); margin-bottom: 20px; font-weight: 600;
-            display: flex; align-items: center; gap: 12px;
-        }
-        .section-label::after {
-            content: ""; flex: 1; height: 1px; background: var(--rule);
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+            gap: 42px;
+            align-items: end;
         }
 
-        /* ── Assignment cards ── */
-        .cards { display: flex; flex-direction: column; gap: 28px; margin-bottom: 64px; }
+        .hero h1 {
+            margin: 0;
+            max-width: 760px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(3.2rem, 9vw, 7.6rem);
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+        }
+
+        .hero h1 span {
+            color: #b9d4ff;
+        }
+
+        .hero-copy {
+            max-width: 650px;
+            margin: 24px 0 0;
+            color: #d7e4f8;
+            font-size: clamp(1rem, 2vw, 1.18rem);
+        }
+
+        .hero-panel {
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 24px;
+            padding: 24px;
+            background: rgba(255,255,255,0.09);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.22);
+            backdrop-filter: blur(14px);
+        }
+
+        .hero-panel strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #fff;
+            font-size: 1.05rem;
+        }
+
+        .hero-panel p {
+            margin: 0;
+            color: #d7e4f8;
+            font-size: 0.95rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            font-size: 0.92rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            color: #061225;
+            background: linear-gradient(135deg, #ffffff, #c7dcff);
+            box-shadow: 0 14px 30px rgba(185, 212, 255, 0.22);
+        }
+
+        .btn-accent {
+            color: #fff;
+            background: linear-gradient(135deg, var(--blue), var(--violet));
+            box-shadow: 0 14px 30px rgba(47, 109, 246, 0.28);
+        }
+
+        .btn-outline {
+            color: var(--blue);
+            border-color: rgba(47, 109, 246, 0.24);
+            background: #fff;
+        }
+
+        .btn-outline:hover {
+            box-shadow: var(--shadow-soft);
+        }
+
+        .section-head {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin: 10px 0 24px;
+        }
+
+        .section-head h2 {
+            margin: 0;
+            color: #f8fbff;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            letter-spacing: -0.03em;
+        }
+
+        .section-head p {
+            max-width: 420px;
+            margin: 0;
+            color: #b8c8de;
+            font-size: 0.96rem;
+        }
+
+        .projects {
+            padding-bottom: 74px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+        }
 
         .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 28px 32px;
             position: relative;
-            transition: box-shadow .35s ease, transform .15s ease-out;
-            box-shadow: var(--shadow);
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            grid-template-rows: auto auto auto;
-            gap: 6px 24px;
-            align-items: baseline;
+            display: flex;
+            min-height: 310px;
+            flex-direction: column;
+            padding: 26px;
             overflow: hidden;
-            transform-style: preserve-3d;
-            perspective: 1000px;
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            background: var(--surface);
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
+
         .card:hover {
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px);
+            border-color: rgba(47, 109, 246, 0.28);
+            box-shadow: var(--shadow);
         }
-        /* Accent strip on hover */
-        .card::before {
+
+        .card::after {
             content: "";
-            position: absolute; left: 0; top: 0; bottom: 0; width: 0;
-            background: var(--accent);
-            transition: width .3s ease;
-            z-index: 1;
+            position: absolute;
+            inset: auto -30px -65px auto;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(47, 109, 246, 0.16), transparent 66%);
         }
-        .card:hover::before { width: 3px; }
 
-        /* Scroll reveal */
-        .card.reveal {
-            opacity: 0; transform: translateY(36px);
+        .card-final {
+            border: 1px solid rgba(124, 92, 255, 0.42);
+            background:
+                linear-gradient(180deg, rgba(124, 92, 255, 0.08), transparent 42%),
+                #fff;
+            box-shadow: 0 20px 58px rgba(47, 109, 246, 0.22);
         }
-        .card.reveal.visible {
-            opacity: 1; transform: translateY(0);
-        }
-        .card:nth-child(1).reveal { transition: opacity .6s ease .05s, transform .6s cubic-bezier(.25,.46,.45,.94) .05s, box-shadow .35s ease; }
-        .card:nth-child(2).reveal { transition: opacity .6s ease .15s, transform .6s cubic-bezier(.25,.46,.45,.94) .15s, box-shadow .35s ease; }
-        .card:nth-child(3).reveal { transition: opacity .6s ease .25s, transform .6s cubic-bezier(.25,.46,.45,.94) .25s, box-shadow .35s ease; }
-        .card:nth-child(4).reveal { transition: opacity .6s ease .35s, transform .6s cubic-bezier(.25,.46,.45,.94) .35s, box-shadow .35s ease; }
 
-        .card .card-num {
-            grid-row: 1 / span 3; grid-column: 1;
-            font-family: Georgia, "Times New Roman", serif;
-            font-size: 3rem; color: var(--border); line-height: 1;
-            align-self: start; margin-top: -4px;
-            transition: color .3s ease;
+        .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 22px;
         }
-        .card:hover .card-num { color: rgba(var(--accent-rgb), .15); }
+
+        .card-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            font-weight: 800;
+            box-shadow: 0 12px 24px rgba(24, 91, 200, 0.24);
+        }
+
+        .card-final .card-num {
+            background: linear-gradient(135deg, var(--violet), var(--blue));
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: #eef4ff;
+            color: #315d9c;
+            font-size: 0.74rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .badge-final {
+            background: #f0eaff;
+            color: #5a42c8;
+        }
 
         .card h3 {
-            grid-row: 1; grid-column: 2;
-            font-family: Georgia, "Times New Roman", "Noto Serif", serif;
-            font-size: 1.2rem; font-weight: 400; color: var(--text);
+            margin: 0 0 12px;
+            font-size: 1.35rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
         }
+
         .card h3 a {
-            color: inherit; text-decoration: none;
-            background: linear-gradient(var(--accent),var(--accent)) left bottom / 0 1px no-repeat;
-            transition: color .25s, background-size .35s ease;
-            padding-bottom: 2px;
+            text-decoration: none;
         }
-        .card h3 a:hover {
-            color: var(--accent);
-            background-size: 100% 1px;
-        }
+
         .card p {
-            grid-row: 2; grid-column: 2;
-            color: var(--muted); font-size: .9rem; line-height: 1.5;
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.96rem;
         }
-        .card .card-links {
-            grid-row: 3; grid-column: 2;
-            display: flex; flex-wrap: wrap; gap: 16px; margin-top: 4px;
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 20px 0 22px;
         }
-        .card .card-links a {
-            font-size: .85rem; font-weight: 500; color: var(--accent); text-decoration: none;
+
+        .tag {
+            padding: 6px 9px;
+            border-radius: 999px;
+            background: var(--surface-soft);
+            color: #2d4b72;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .card-links {
             position: relative;
-            padding-bottom: 1px;
-            background: linear-gradient(var(--accent),var(--accent)) left bottom / 0 1px no-repeat;
-            transition: background-size .3s ease;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: auto;
         }
-        .card .card-links a:hover { background-size: 100% 1px; }
-        .card .card-links a::after {
-            content: " →"; opacity: 0; transition: opacity .25s ease, transform .25s ease;
-            transform: translateX(-4px); display: inline-block;
-        }
-        .card .card-links a:hover::after { opacity: 1; transform: translateX(0); }
 
-        /* ── Footer ── */
         footer {
-            margin-top: auto; padding: 40px 0 32px;
-            border-top: 1px solid var(--rule);
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap; gap: 12px;
-            font-size: .8rem; color: var(--muted);
-        }
-        footer a {
-            color: var(--muted); text-decoration: none;
-            background: linear-gradient(var(--accent),var(--accent)) left bottom / 0 1px no-repeat;
-            transition: color .2s, background-size .35s ease;
-            padding-bottom: 2px;
-        }
-        footer a:hover {
-            color: var(--accent);
-            background-size: 100% 1px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 28px 0 38px;
+            color: #506176;
+            font-size: 0.9rem;
         }
 
-        /* ── Responsive ── */
+        .deerflow-mark {
+            color: #697c92;
+            text-decoration: none;
+            opacity: 0.72;
+        }
+
+        .deerflow-mark:hover {
+            opacity: 1;
+            color: var(--blue);
+        }
+
+        @media (max-width: 860px) {
+            .hero {
+                min-height: auto;
+                padding: 44px 0 38px;
+            }
+
+            .hero-grid,
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .section-head h2 {
+                color: #102033;
+            }
+
+            .section-head p {
+                color: var(--muted);
+            }
+        }
+
         @media (max-width: 560px) {
-            header { padding: 48px 0 36px; margin-bottom: 36px; }
-            .card { padding: 20px 24px; grid-template-columns: 1fr; gap: 4px 0; }
-            .card .card-num { display: none; }
-            .card .card-links { flex-direction: column; gap: 8px; }
-            footer { flex-direction: column; align-items: flex-start; }
-            .mouse-glow { display: none; }
-            #particles { opacity: .5; }
-            #back-to-top { bottom: 20px; right: 16px; width: 36px; height: 36px; font-size: 1rem; }
+            .page {
+                width: min(100% - 28px, 1120px);
+            }
+
+            .hero h1 {
+                font-size: clamp(2.7rem, 15vw, 4.2rem);
+            }
+
+            .hero-panel {
+                padding: 18px;
+                border-radius: 18px;
+            }
+
+            .hero-actions,
+            .card-links {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .card {
+                min-height: auto;
+                padding: 22px;
+                border-radius: 20px;
+            }
+
+            footer {
+                align-items: flex-start;
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-
-<canvas id="particles"></canvas>
-<div class="mouse-glow" id="glow" aria-hidden="true"></div>
-<button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
-
-<div class="container">
-
-    <header>
-        <p class="overline">Fundamentals of Software Technology &middot; 2026</p>
-        <h1 id="hero-title"></h1>
-        <p class="subtitle">A static portfolio documenting coursework in software engineering,<br>version control, and remote development workflows.</p>
-    </header>
-
-    <p class="section-label">Project Showcase</p>
-
-    <div class="cards">
-
-        <div class="card reveal" data-tilt>
-            <span class="card-num">01</span>
-            <h3><a href="report.pdf" target="_blank">Remote Development</a></h3>
-            <p>Research and implementation of radar signal processing environments &mdash; exploring WSL-based toolchains and cross-platform development.</p>
-            <div class="card-links">
-                <a href="report.md">Read Markdown</a>
-                <a href="report.pdf" target="_blank">View PDF</a>
+    <div class="page">
+        <header class="hero">
+            <div class="hero-grid">
+                <div>
+                    <p class="hero-kicker">Fundamentals of Software Technology</p>
+                    <h1>Zhan <span>Yibo</span><br>Coursework Portfolio</h1>
+                    <p class="hero-copy">
+                        A software technology coursework website collecting remote development,
+                        version control, AI agent deployment, and an AI-assisted final web game.
+                    </p>
+                    <div class="hero-actions">
+                        <a class="btn btn-primary" href="#projects">View Projects</a>
+                        <a class="btn btn-accent" href="assignment4/index.html">Play Final Game</a>
+                    </div>
+                </div>
+                <aside class="hero-panel" aria-label="Portfolio summary">
+                    <strong>Course website submission</strong>
+                    <p>
+                        Four assignments are organized as project cards with reports,
+                        source artifacts, and the final playable Assignment 4 game.
+                    </p>
+                </aside>
             </div>
-        </div>
+        </header>
 
-        <div class="card reveal" data-tilt>
-            <span class="card-num">02</span>
-            <h3><a href="Assignment2_report.html">Static Site &amp; Git Management</a></h3>
-            <p>Deployment of this blog using GitHub Pages with structured version control &mdash; from local repository initialization to live hosting.</p>
-            <div class="card-links">
-                <a href="Assignment2_report.html">Read Deployment Report</a>
+        <main id="projects" class="projects">
+            <div class="section-head">
+                <h2>Project Showcase</h2>
+                <p>Each card links to the original assignment materials and keeps the required submission files available.</p>
             </div>
-        </div>
 
-        <div class="card reveal" data-tilt>
-            <span class="card-num">03</span>
-            <h3><a href="assignment3/Assignment3_report.html">Deployment &amp; Integration of AI Agents</a></h3>
-            <p>Configuring online and local LLMs, building a Python agent for file analysis, and integrating AI into the IDE workflow.</p>
-            <div class="card-links">
-                <a href="assignment3/Assignment3_report.html">Read AI Agents Report</a>
-                <a href="assignment3/Assignment3_report.md">Read Markdown</a>
-                <a href="assignment3/online_agent_viewer.html">View Agent Script</a>
-            </div>
-        </div>
-        <div class="card reveal" data-tilt>
-            <span class="card-num">04</span>
-            <h3><a href="assignment4/index.html">Defend Your Thesis</a></h3>
-            <p>A playable HTML5 defense game built with LLM-assisted development, featuring character selection, Canvas combat, scoring, and an in-game AI Advisor.</p>
-            <div class="card-links">
-                <a href="assignment4/index.html">Play Game</a>
-                <a href="assignment4/Assignment4_report.html">Read Report</a>
-                <a href="assignment4/REPORT.md">Read Markdown</a>
-            </div>
-        </div>
+            <div class="cards">
+                <article class="card">
+                    <div class="card-top">
+                        <span class="card-num">01</span>
+                        <span class="badge">Assignment 1</span>
+                    </div>
+                    <h3><a href="report.pdf" target="_blank" rel="noreferrer">Remote Development</a></h3>
+                    <p>
+                        Research and implementation of radar signal processing environments,
+                        exploring WSL-based toolchains and cross-platform development.
+                    </p>
+                    <div class="tags" aria-label="Assignment 1 technologies">
+                        <span class="tag">WSL</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">Markdown</span>
+                    </div>
+                    <div class="card-links">
+                        <a class="btn btn-outline" href="report.md">Read Markdown</a>
+                        <a class="btn btn-outline" href="report.pdf" target="_blank" rel="noreferrer">View PDF</a>
+                    </div>
+                </article>
 
+                <article class="card">
+                    <div class="card-top">
+                        <span class="card-num">02</span>
+                        <span class="badge">Assignment 2</span>
+                    </div>
+                    <h3><a href="Assignment2_report.html">Static Site &amp; Git Management</a></h3>
+                    <p>
+                        Deployment of this blog using GitHub Pages with structured version control,
+                        from local repository initialization to live hosting.
+                    </p>
+                    <div class="tags" aria-label="Assignment 2 technologies">
+                        <span class="tag">Git</span>
+                        <span class="tag">GitHub Pages</span>
+                        <span class="tag">HTML</span>
+                    </div>
+                    <div class="card-links">
+                        <a class="btn btn-outline" href="Assignment2_report.html">Read Deployment Report</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-top">
+                        <span class="card-num">03</span>
+                        <span class="badge">Assignment 3</span>
+                    </div>
+                    <h3><a href="assignment3/Assignment3_report.html">Deployment &amp; Integration of AI Agents</a></h3>
+                    <p>
+                        Configuring online and local LLMs, building a Python agent for file analysis,
+                        and integrating AI into the IDE workflow.
+                    </p>
+                    <div class="tags" aria-label="Assignment 3 technologies">
+                        <span class="tag">DeepSeek API</span>
+                        <span class="tag">Ollama</span>
+                        <span class="tag">VSCode</span>
+                    </div>
+                    <div class="card-links">
+                        <a class="btn btn-outline" href="assignment3/Assignment3_report.html">Read AI Agents Report</a>
+                        <a class="btn btn-outline" href="assignment3/Assignment3_report.md">Read Markdown</a>
+                        <a class="btn btn-outline" href="assignment3/online_agent_viewer.html">View Agent Script</a>
+                    </div>
+                </article>
+
+                <article class="card card-final">
+                    <div class="card-top">
+                        <span class="card-num">04</span>
+                        <span class="badge badge-final">Final Project</span>
+                    </div>
+                    <h3><a href="assignment4/index.html">Defend Your Thesis</a></h3>
+                    <p>
+                        A playable HTML5 defense game built with LLM-assisted development,
+                        featuring character selection, Canvas combat, scoring, and an in-game AI Advisor.
+                    </p>
+                    <div class="tags" aria-label="Assignment 4 technologies">
+                        <span class="tag">HTML5 Canvas</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">AI-assisted Development</span>
+                    </div>
+                    <div class="card-links">
+                        <a class="btn btn-accent" href="assignment4/index.html">Play Game</a>
+                        <a class="btn btn-outline" href="assignment4/Assignment4_report.html">Read Report</a>
+                        <a class="btn btn-outline" href="assignment4/REPORT.md">Read Markdown</a>
+                    </div>
+                </article>
+            </div>
+        </main>
+
+        <footer>
+            <span>Zhan Yibo &middot; ZY2557213</span>
+            <a class="deerflow-mark" href="https://deerflow.tech" target="_blank" rel="noreferrer">Created By Deerflow</a>
+        </footer>
     </div>
-
-    <footer>
-        <span>Zhan Yibo &nbsp;&middot;&nbsp; ZY2557213</span>
-        <a href="https://deerflow.tech" target="_blank" title="Created By Deerflow">&#9670;&nbsp;Deerflow</a>
-    </footer>
-
-</div>
-
-<script>
-(function() {
-    /* ═══════════════════════════════════════════
-       Particle Background
-       ═══════════════════════════════════════════ */
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    const particles = [];
-    const PARTICLE_COUNT = 70;
-    const CONNECT_DIST = 120;
-    const ACCENT = [139, 105, 20];
-
-    let w, h;
-
-    function resize() {
-        w = canvas.width  = window.innerWidth;
-        h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    class Particle {
-        constructor() { this.reset(true); }
-        reset(init) {
-            this.x = init ? Math.random() * w : (Math.random() < .5 ? -10 : w + 10);
-            this.y = init ? Math.random() * h : (Math.random() < .5 ? -10 : h + 10);
-            this.vx = (Math.random() - .5) * .35;
-            this.vy = (Math.random() - .5) * .35;
-            this.r = Math.random() * 1.4 + .6;
-            this.alpha = Math.random() * .35 + .15;
-        }
-        update() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if (this.x < -20 || this.x > w + 20 || this.y < -20 || this.y > h + 20) this.reset(false);
-        }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-            ctx.fillStyle = 'rgba(' + ACCENT.join(',') + ',' + this.alpha + ')';
-            ctx.fill();
-        }
-    }
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
-
-    function animateParticles() {
-        ctx.clearRect(0, 0, w, h);
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
-            for (let j = i + 1; j < particles.length; j++) {
-                var dx = particles[i].x - particles[j].x;
-                var dy = particles[i].y - particles[j].y;
-                var dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < CONNECT_DIST) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = 'rgba(' + ACCENT.join(',') + ',' + (0.04 * (1 - dist / CONNECT_DIST)) + ')';
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
-            }
-        }
-        requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
-
-    /* ═══════════════════════════════════════════
-       Mouse Glow
-       ═══════════════════════════════════════════ */
-    const glow = document.getElementById('glow');
-    let mx = -300, my = -300, cx = -300, cy = -300;
-
-    document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
-
-    function followGlow() {
-        cx += (mx - cx) * 0.08;
-        cy += (my - cy) * 0.08;
-        glow.style.left = cx + 'px';
-        glow.style.top  = cy + 'px';
-        requestAnimationFrame(followGlow);
-    }
-    followGlow();
-
-    /* ═══════════════════════════════════════════
-       Typewriter Effect
-       ═══════════════════════════════════════════ */
-    const heroEl = document.getElementById('hero-title');
-    const targetHTML = 'Zhan <em>Yibo</em>\'s<br>Personal Blog';
-    let charIndex = 0;
-
-    function typeChar() {
-        if (charIndex < targetHTML.length) {
-            var partial = targetHTML.substring(0, charIndex + 1);
-            if (targetHTML[charIndex] === '>') {
-                heroEl.innerHTML = partial + '<span class="cursor"></span>';
-            } else if (targetHTML[charIndex] === '<') {
-                heroEl.innerHTML = targetHTML.substring(0, charIndex) + '<span class="cursor"></span>';
-            } else if (charIndex > 0 && targetHTML[charIndex - 1] === '>') {
-                heroEl.innerHTML = partial + '<span class="cursor"></span>';
-            } else if (partial.indexOf('<') === -1 || partial.lastIndexOf('>') > partial.lastIndexOf('<')) {
-                heroEl.innerHTML = partial + '<span class="cursor"></span>';
-            } else {
-                var lastSafe = partial.lastIndexOf('>');
-                heroEl.innerHTML = (lastSafe >= 0 ? targetHTML.substring(0, lastSafe + 1) : '') + '<span class="cursor"></span>';
-            }
-            charIndex++;
-            setTimeout(typeChar, 55 + Math.random() * 25);
-        } else {
-            heroEl.innerHTML = targetHTML;
-            var c = heroEl.querySelector('.cursor');
-            if (c) c.classList.add('done');
-        }
-    }
-    setTimeout(typeChar, 400);
-
-    /* ═══════════════════════════════════════════
-       3D Card Tilt
-       ═══════════════════════════════════════════ */
-    document.querySelectorAll('[data-tilt]').forEach(function(card) {
-        card.addEventListener('mousemove', function(e) {
-            var rect = card.getBoundingClientRect();
-            var x = e.clientX - rect.left;
-            var y = e.clientY - rect.top;
-            var rx = (y / rect.height - 0.5) * -6;
-            var ry = (x / rect.width  - 0.5) *  6;
-            card.style.transform = 'perspective(800px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) translateY(-2px)';
-        });
-        card.addEventListener('mouseleave', function() {
-            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
-        });
-    });
-
-    /* ═══════════════════════════════════════════
-       Back to Top Button
-       ═══════════════════════════════════════════ */
-    const btt = document.getElementById('back-to-top');
-    window.addEventListener('scroll', function() {
-        if (window.scrollY > 400) {
-            btt.classList.add('visible');
-        } else {
-            btt.classList.remove('visible');
-        }
-    });
-    btt.addEventListener('click', function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    /* ═══════════════════════════════════════════
-       Scroll Reveal (Intersection Observer)
-       ═══════════════════════════════════════════ */
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
-
-    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
-})();
-</script>
-
 </body>
 </html>
