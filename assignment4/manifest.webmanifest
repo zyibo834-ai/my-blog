@@ -1,7 +1,7 @@
 {
   "name": "Defend Your Thesis",
   "short_name": "Thesis Defense",
-  "description": "A browser survival game for Assignment 4: Developing an AI-Assisted Application.",
+  "description": "An Assignment 4 browser survival-defense game.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

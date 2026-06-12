@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -15,14 +15,14 @@
     <div class="app-shell">
       <header class="topbar">
         <div class="brand-block">
-          <span class="brand-kicker">Assignment 4 Prototype</span>
+          <span class="brand-kicker">Assignment 4 English Version</span>
           <h1>Defend Your Thesis</h1>
         </div>
         <div class="topbar-actions">
-          <span class="status-chip" id="installStatus">Web Build</span>
+          <span class="status-chip" id="installStatus">Web Version</span>
           <span class="status-chip">Best <strong id="bestScoreLabel">0</strong></span>
-          <button class="icon-button" id="muteButton" type="button" title="Audio">
-            <span aria-hidden="true">A</span>
+          <button class="icon-button" id="muteButton" type="button" title="Sound">
+            <span aria-hidden="true">S</span>
           </button>
         </div>
       </header>
@@ -31,24 +31,24 @@
         <section class="screen screen-select is-active" id="selectScreen" aria-labelledby="selectTitle">
           <div class="selection-copy">
             <span class="section-index">01</span>
-            <h2 id="selectTitle">Choose a defender before the committee arrives.</h2>
+            <h2 id="selectTitle">Choose your defender before the committee arrives.</h2>
             <p>
-              A playable survival game about protecting research work from bugs,
-              deadlines, and peer review pressure.
+              A playable survival-defense game: protect your thesis from bugs,
+              deadlines, reviewers, and the final defense chair.
             </p>
           </div>
 
-          <div class="character-grid" id="characterGrid" aria-label="Character selection">
+          <div class="character-grid" id="characterGrid" aria-label="Character Selection">
             <article class="character-card is-selected" data-character="methodologist">
               <div class="portrait portrait-methodologist" aria-hidden="true">
                 <span></span>
               </div>
               <div>
-                <h3>Methodologist</h3>
-                <p>Balanced defense, precise shots, steady focus recovery.</p>
+                <h3>Method Student</h3>
+                <p>Precision control. Reliable shots and a skill that briefly locks down key threats.</p>
                 <dl>
-                  <div><dt>Speed</dt><dd>7</dd></div>
-                  <div><dt>Focus</dt><dd>7</dd></div>
+                  <div><dt>Control</dt><dd>9</dd></div>
+                  <div><dt>Focus</dt><dd>8</dd></div>
                   <div><dt>Power</dt><dd>6</dd></div>
                 </dl>
               </div>
@@ -60,11 +60,11 @@
               </div>
               <div>
                 <h3>Lab Guardian</h3>
-                <p>Slower movement, larger shield, stronger thesis repair.</p>
+                <p>Defensive anchor. Heavy shots and shields are steadier; repairs the thesis when nearby.</p>
                 <dl>
-                  <div><dt>Speed</dt><dd>5</dd></div>
-                  <div><dt>Focus</dt><dd>9</dd></div>
-                  <div><dt>Power</dt><dd>7</dd></div>
+                  <div><dt>Defense</dt><dd>10</dd></div>
+                  <div><dt>Turret</dt><dd>8</dd></div>
+                  <div><dt>Speed</dt><dd>4</dd></div>
                 </dl>
               </div>
             </article>
@@ -75,11 +75,11 @@
               </div>
               <div>
                 <h3>Night Coder</h3>
-                <p>Fast movement, burst ability, fragile under pressure.</p>
+                <p>High-speed burst. Faster movement and fire rate, with short overload windows and low safety.</p>
                 <dl>
-                  <div><dt>Speed</dt><dd>9</dd></div>
-                  <div><dt>Focus</dt><dd>5</dd></div>
-                  <div><dt>Power</dt><dd>8</dd></div>
+                  <div><dt>Speed</dt><dd>10</dd></div>
+                  <div><dt>Burst</dt><dd>9</dd></div>
+                  <div><dt>Defense</dt><dd>3</dd></div>
                 </dl>
               </div>
             </article>
@@ -90,16 +90,19 @@
               Start Defense
             </button>
             <button class="secondary-button" id="practiceButton" type="button">
-              Low Pressure Run
+              Practice Mode
+            </button>
+            <button class="secondary-button" id="endlessButton" type="button">
+              Endless Mode
             </button>
           </div>
         </section>
 
         <section class="screen screen-game" id="gameScreen" aria-labelledby="gameTitle">
-          <h2 class="sr-only" id="gameTitle">Game arena</h2>
+          <h2 class="sr-only" id="gameTitle">Game Arena</h2>
           <div class="hud">
             <div class="meter-block">
-              <div class="meter-label"><span>Thesis</span><strong id="thesisLabel">100%</strong></div>
+              <div class="meter-label"><span>Thesis Integrity</span><strong id="thesisLabel">100%</strong></div>
               <div class="meter"><span id="thesisMeter"></span></div>
             </div>
             <div class="meter-block">
@@ -108,6 +111,7 @@
             </div>
             <div class="hud-stat"><span>Score</span><strong id="scoreLabel">0</strong></div>
             <div class="hud-stat"><span>Wave</span><strong id="waveLabel">1</strong></div>
+            <div class="hud-stat"><span>Boost</span><strong id="inspirationLabel">None</strong></div>
             <div class="hud-stat"><span>Time</span><strong id="timeLabel">00:00</strong></div>
             <div class="hud-actions">
               <button class="icon-button" id="pauseButton" type="button" title="Pause">
@@ -123,7 +127,7 @@
             <div class="arena-wrap">
               <canvas id="gameCanvas" width="960" height="640"></canvas>
               <div class="ability-dock">
-                <button id="abilityButton" type="button" title="Special ability">
+                <button id="abilityButton" type="button" title="Special Ability">
                   <span id="abilityName">Focus Pulse</span>
                   <small id="abilityCooldown">Ready</small>
                 </button>
@@ -136,7 +140,7 @@
             <aside class="assistant-panel" aria-labelledby="assistantTitle">
               <div class="assistant-header">
                 <span class="section-index">AI</span>
-                <h2 id="assistantTitle">Advisor</h2>
+                <h2 id="assistantTitle">Defense Advisor</h2>
               </div>
               <div class="assistant-feed" id="assistantFeed" aria-live="polite"></div>
               <form class="assistant-form" id="assistantForm">
@@ -152,8 +156,8 @@
 
     <div class="modal" id="gameOverModal" aria-hidden="true" role="dialog" aria-labelledby="gameOverTitle">
       <div class="modal-panel">
-        <span class="section-index">Defense Closed</span>
-        <h2 id="gameOverTitle">The committee reached the thesis.</h2>
+        <span class="section-index" id="gameOverBadge">Defense Over</span>
+        <h2 id="gameOverTitle">The committee broke through your thesis defense.</h2>
         <p id="gameOverSummary">Score 0</p>
         <div class="result-grid">
           <div><span>Final Score</span><strong id="finalScore">0</strong></div>
@@ -161,9 +165,18 @@
           <div><span>Survival Time</span><strong id="finalTime">00:00</strong></div>
         </div>
         <div class="launch-row">
-          <button class="primary-button" id="againButton" type="button">Run Again</button>
-          <button class="secondary-button" id="changeCharacterButton" type="button">Change Defender</button>
+          <button class="primary-button" id="againButton" type="button">Play Again</button>
+          <button class="secondary-button" id="changeCharacterButton" type="button">Change Character</button>
         </div>
+      </div>
+    </div>
+
+    <div class="modal" id="upgradeModal" aria-hidden="true" role="dialog" aria-labelledby="upgradeTitle">
+      <div class="modal-panel upgrade-panel">
+        <span class="section-index">Upgrade</span>
+        <h2 id="upgradeTitle">Choose a Defense Upgrade</h2>
+        <p id="upgradeHint">Strengthen your thesis defense before the next wave.</p>
+        <div class="upgrade-grid" id="upgradeGrid"></div>
       </div>
     </div>
 
