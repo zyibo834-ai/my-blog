@@ -164,15 +164,15 @@ footer a:hover { color:var(--accent); }
 </div>
 <table class="code-table">
 <tr><td class="ln">1</td><td class="code"><span class="s">"""</span></td></tr>
-<tr><td class="ln">2</td><td class="code"><span class="s">Assignment 3 — Online Agent: File Analysis &amp; Web Search</span></td></tr>
+<tr><td class="ln">2</td><td class="code"><span class="s">Assignment 3 - Online Agent: File Analysis &amp; General Q&amp;A</span></td></tr>
 <tr><td class="ln">3</td><td class="code"><span class="s">Uses an OpenAI-compatible API (DeepSeek / Qwen / OpenAI) to:</span></td></tr>
-<tr><td class="ln">4</td><td class="code"><span class="s">  1. Analyze a local file (Markdown, PDF, code, etc.)</span></td></tr>
+<tr><td class="ln">4</td><td class="code"><span class="s">  1. Analyze local text-based files (Markdown, code, txt, etc.)</span></td></tr>
 <tr><td class="ln">5</td><td class="code"><span class="s">  2. Answer questions about its contents</span></td></tr>
 <tr><td class="ln">6</td><td class="code"><span class="s"></span></td></tr>
 <tr><td class="ln">7</td><td class="code"><span class="s">Usage:</span></td></tr>
 <tr><td class="ln">8</td><td class="code"><span class="s">  python online_agent.py --file report.md</span></td></tr>
 <tr><td class="ln">9</td><td class="code"><span class="s">  python online_agent.py --file report.md --question "Summarize the key findings"</span></td></tr>
-<tr><td class="ln">10</td><td class="code"><span class="s">  python online_agent.py --question "What is Python?"  (web-search mode without file)</span></td></tr>
+<tr><td class="ln">10</td><td class="code"><span class="s">  python online_agent.py --question "What is Python?"  (general Q&amp;A mode without file)</span></td></tr>
 <tr><td class="ln">11</td><td class="code"><span class="s">"""</span></td></tr>
 <tr><td class="ln">12</td><td class="code"></td></tr>
 <tr><td class="ln">13</td><td class="code"><span class="k">import</span> os</td></tr>
@@ -238,8 +238,8 @@ footer a:hover { color:var(--accent); }
 <tr><td class="ln">73</td><td class="code">    <span class="k">return</span> call_llm(messages)</td></tr>
 <tr><td class="ln">74</td><td class="code"></td></tr>
 <tr><td class="ln">75</td><td class="code"></td></tr>
-<tr><td class="ln">76</td><td class="code"><span class="k">def</span> <span class="nf">web_search_agent</span>(question: str) -&gt; str:</td></tr>
-<tr><td class="ln">77</td><td class="code">    <span class="s">"""Ask the LLM a question that may require general knowledge (simulates web search via LLM)."""</span></td></tr>
+<tr><td class="ln">76</td><td class="code"><span class="k">def</span> <span class="nf">general_qa_agent</span>(question: str) -&gt; str:</td></tr>
+<tr><td class="ln">77</td><td class="code">    <span class="s">"""Ask the online LLM a general question without reading a file."""</span></td></tr>
 <tr><td class="ln">78</td><td class="code">    messages = [</td></tr>
 <tr><td class="ln">79</td><td class="code">        {<span class="s">"role"</span>: <span class="s">"system"</span>, <span class="s">"content"</span>: (</td></tr>
 <tr><td class="ln">80</td><td class="code">            <span class="s">"You are a helpful research assistant with access to general knowledge up to 2024. "</span></td></tr>
@@ -254,7 +254,7 @@ footer a:hover { color:var(--accent); }
 <tr><td class="ln">89</td><td class="code"></td></tr>
 <tr><td class="ln">90</td><td class="code"><span class="k">def</span> <span class="nf">main</span>():</td></tr>
 <tr><td class="ln">91</td><td class="code">    parser = argparse.ArgumentParser(</td></tr>
-<tr><td class="ln">92</td><td class="code">        description=<span class="s">"Online LLM Agent — File Analysis &amp; Web Search"</span></td></tr>
+<tr><td class="ln">92</td><td class="code">        description=<span class="s">"Online LLM Agent - File Analysis &amp; General Q&amp;A"</span></td></tr>
 <tr><td class="ln">93</td><td class="code">    )</td></tr>
 <tr><td class="ln">94</td><td class="code">    parser.add_argument(<span class="s">"--file"</span>, <span class="s">"-f"</span>, help=<span class="s">"Path to a file to analyze"</span>)</td></tr>
 <tr><td class="ln">95</td><td class="code">    parser.add_argument(<span class="s">"--question"</span>, <span class="s">"-q"</span>, help=<span class="s">"Question to ask about the file or general knowledge"</span>)</td></tr>
@@ -274,7 +274,7 @@ footer a:hover { color:var(--accent); }
 <tr><td class="ln">109</td><td class="code">        result = analyze_file(args.file, args.question)</td></tr>
 <tr><td class="ln">110</td><td class="code">    <span class="k">else</span>:</td></tr>
 <tr><td class="ln">111</td><td class="code">        <span class="bp">print</span>(<span class="s">f"Question: {args.question}"</span>)</td></tr>
-<tr><td class="ln">112</td><td class="code">        result = web_search_agent(args.question)</td></tr>
+<tr><td class="ln">112</td><td class="code">        result = general_qa_agent(args.question)</td></tr>
 <tr><td class="ln">113</td><td class="code"></td></tr>
 <tr><td class="ln">114</td><td class="code">    <span class="bp">print</span>(<span class="s">"-"</span> * <span class="m">50</span>)</td></tr>
 <tr><td class="ln">115</td><td class="code">    <span class="bp">print</span>(result)</td></tr>
