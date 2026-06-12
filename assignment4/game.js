@@ -2402,6 +2402,15 @@
     }[key] || key;
   }
 
+  function isGameControlKey(key) {
+    return ["up", "down", "left", "right", "fire", "ability", "pause"].includes(key);
+  }
+
+  function clearInputState() {
+    keys.clear();
+    pointer.down = false;
+  }
+
   function handlePointerMove(event) {
     const rect = els.canvas.getBoundingClientRect();
     pointer.x = clamp(event.clientX - rect.left, 0, canvasWidth);
@@ -2464,30 +2473,38 @@
       }, 180);
     });
 
-    window.addEventListener("keydown", (event) => {
+    document.addEventListener("keydown", (event) => {
       if (isTypingTarget(event.target)) return;
       const key = normalizeControlKey(event);
-      if (["up", "down", "left", "right", "fire", "ability", "pause"].includes(key)) {
+      if (isGameControlKey(key)) {
         event.preventDefault();
       }
       if (key === "pause") {
         togglePause();
       }
       keys.add(key);
-    });
+    }, { capture: true });
 
-    window.addEventListener("keyup", (event) => {
-      keys.delete(normalizeControlKey(event));
-    });
+    document.addEventListener("keyup", (event) => {
+      const key = normalizeControlKey(event);
+      if (isGameControlKey(key) && !isTypingTarget(event.target)) {
+        event.preventDefault();
+      }
+      keys.delete(key);
+    }, { capture: true });
 
     window.addEventListener("blur", () => {
-      keys.clear();
-      pointer.down = false;
+      clearInputState();
     });
 
     window.addEventListener("focus", () => {
-      keys.clear();
-      pointer.down = false;
+      clearInputState();
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        clearInputState();
+      }
     });
 
     els.canvas.addEventListener("pointermove", handlePointerMove);
